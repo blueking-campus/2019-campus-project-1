@@ -1,0 +1,38 @@
+[
+	{
+		"pk":1,
+		"model": "auth.user", 
+		"fields": {
+			"username": "144115213263173835",                     
+			"last_name": "",
+			"password": "", 
+			"is_staff": 1,
+			"is_active": 1,                     
+			"is_superuser": 1
+		}
+	},
+	{
+		"pk":2,
+		"model": "auth.user", 
+		"fields": {
+			"username": "144115213263173873",                     
+			"last_name": "",
+			"password": "", 
+			"is_staff": 1,
+			"is_active": 1,                     
+			"is_superuser": 1
+		}
+	},
+	{
+		"pk":3,
+		"model": "auth.user", 
+		"fields": {
+			"username": "144115213263173895",                                 
+			"last_name": "",
+			"password": "", 
+			"is_staff": 1,
+			"is_active": 1,                                 
+			"is_superuser": 1
+		}
+	}
+]
