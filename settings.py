@@ -9,6 +9,8 @@ import sys
 # Import global settings to make it easier to extend settings.
 from django.conf.global_settings import *
 
+import pymysql
+pymysql.install_as_MySQLdb()
 # ==============================================================================
 # APP 运行环境配置信息
 # ==============================================================================

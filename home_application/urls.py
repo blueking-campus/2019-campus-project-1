@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.conf.urls import patterns
+from django.conf.urls import patterns, include
 
 urlpatterns = patterns(
     'home_application.views',
@@ -7,4 +7,5 @@ urlpatterns = patterns(
     (r'^$', 'home'),
     (r'^dev_guide/$', 'dev_guide'),
     (r'^contact/$', 'contact'),
+    (r'^organization/', include('organization.urls')),
 )
