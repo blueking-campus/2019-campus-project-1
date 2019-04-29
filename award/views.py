@@ -81,6 +81,4 @@ def index(request):
     offSet = (curPage - 1) * limit
     awards = Award.objects.all()[offSet: offSet + limit]
 
-
-
     return render(request, "award/award_index.html", {'awards': awards, 'allPage': allPage, 'curPage': curPage})
