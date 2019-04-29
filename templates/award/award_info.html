@@ -41,7 +41,9 @@
     <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/daterangepicker-2.0.5/moment.min.js"></script>
     <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/daterangepicker-2.0.5/daterangepicker.js"></script>
     <!--弹层-->
-    <script src="https://cdn.bootcss.com/artDialog/7.0.0/dialog-plus.js"></script>
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/artDialog-6.0.4/css/ui-dialog.css"
+          rel="stylesheet">
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/artDialog-6.0.4/dist/dialog-min.js"></script>
     <style>
         td {
             white-space: nowrap;
@@ -115,134 +117,114 @@
                 <div class="king-page-topbar ">
                     <ul class="breadcrumb king-breadcrumb pl0 bg-transparent">
                         <li><a href="javascript:void(0);">系统管理</a></li>
-                        <li><a href="javascript:void(0);">奖项信息</a></li>
+                        <li><a href="javascript:void(0);">奖项详情</a></li>
                     </ul>
                 </div>
-                <!-- 面板 编辑 开始 -->
-                <!-- 面板 编辑 结束 -->
-                <div class="row" style="height: 44px; margin: 10px 5px 0px">
-                    <form class="form-inline">
-                        <div class="form-group mr10">
-                            <label for="inputAwardName">申报奖项：</label>
-                            <input type="text" class="form-control" id="inputAwardName">
+            </div>
+            <div class="king-content-wrap">
+                <div class="king-layout1-content" style="margin-left: 216px;">
+                    <div class="panel king-panel1 mb0  ">
+                        <div class="name">
+                            <label class="control-label col-sm-3 pt0" for="name">奖项名称</label>
+                            <div id="name">{{ award.name }}</div>
                         </div>
-                        &nbsp;&nbsp;
-                        <div class="form-group mr5">
-                            <label for="inputOrganization">所属组织：</label>
-                            <input type="text" class="form-control" id="inputOrganization">
+                        <br/>
+                        <div>
+                            <label class="control-label col-sm-3 pt0" for="name">参评要求</label>
+                            <div id="requirement">{% autoescape off %} {{ award.requirement }} {% endautoescape %}</div>
                         </div>
-                        &nbsp;&nbsp;
-                        <div class="plugin3_demo" id="plugin3_demo1" style="display:inline-block;">
-                            <label>状态: </label>
-                            <select class="select2_box" style="width:100px;height: 34px">
-                                <option value="">不限</option>
-                                <option value="">生效中</option>
-                                <option value="">已过期</option>
-                            </select>
+                        <br/>
+                        <div>
+                            <label class="control-label col-sm-3 pt0" for="name">审核人</label>
+                            <div id="principal">{{ principal }}</div>
                         </div>
-                        <label for="daterangepicker_demo2">申报时间：</label>
-                        <input type="text" class="form-control daterangepicker_demo" id="daterangepicker_demo2"
-                               placeholder="选择日期..." style="width: 175px">
-                        &nbsp;&nbsp;
-                        <button type="button" class="king-btn-demo king-btn king-round king-info">查询</button>
-                        &nbsp;&nbsp;
-                        <button type="button" class="king-btn-demo king-btn king-round king-info">批量克隆</button>
-                        &nbsp;&nbsp;
-                        <button type="button" class="king-btn-demo king-btn king-round king-info" id="create">新增
-                        </button>
-                    </form>
-                </div>
-                <div class="container-fluid mb0 " style="padding: 0px">
-                    <div class="row">
-                        <div class="col-md-7" style="width:80%!important;">
-                            <table class="table mb0 pr15 ranger-box2  ">
-                                <thead>
-                                <tr>
-                                    <th>所属组织</th>
-                                    <th>奖项级别</th>
-                                    <th>申报奖项</th>
-                                    <th>状态</th>
-                                    <th>开始时间</th>
-                                    <th>申报时间</th>
-                                    <th>申报人数</th>
-                                    <th>获奖人数</th>
-                                    <th>操作</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for award in awards %}
-                                <tr>
-                                    <td>{{award.organization}}</td>
-                                    <td>{{award.level.name}}</td>
-                                    <td>{{award.name}}</td>
-                                    {% if award.status %}
-                                    <td>生效</td>
-                                    {% else %}
-                                    <td>过期</td>
-                                    {% endif %}
-                                    <td>{{award.submit_start_time}}</td>
-                                    <td>{{award.submit_end_time}}</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        <a href="/award/api/get_award/?award_id={{award.id}}">查看</a>
-                                        <a href="">克隆</a>
-                                        <a href="/award/api/edit_award/?award_id={{award.id}}">编辑</a>
-                                        <a href="/award/api/delete_award/?award_id={{award.id}}" class="delete">删除</a>
-                                    </td>
-                                </tr>
-                                {% endfor %}
+                        <br/>
+                        <div>
+                            <label class="control-label col-sm-3 pt0" for="name">状态</label>
+                            {% if award.status %}
+                            <div>生效</div>
+                            {% else %}
+                            <div>过期</div>
+                            {% endif %}
 
-
-                                </tbody>
-                            </table>
-                            {% ifnotequal cur_page 1 %}
-                            <a id="page_up" href="?page={{cur_page|add:'-1'}}">
-                                上一页
-                            </a>
-                            {% endifnotequal %}
-                            第{{ cur_page }}/{{ allPage }}页
-                            {% ifnotequal cur_page allPage %}
-                            <a id="page_down" href="?page={{cur_page|add:'1'}}">
-                                下一页
-                            </a>
-                            {% endifnotequal %}
                         </div>
+                        <br/>
+                        <div>
+                            <label class="control-label col-sm-3 pt0" for="name">奖项级别</label>
+                            <div id="level">{{ award.level.name }}</div>
+                        </div>
+                        <br/>
+                        <div>
+                            <label class="control-label col-sm-3 pt0" for="name">所属组织</label>
+                            <div id="organization">{{ award.organization }}</div>
+                        </div>
+                        <br/>
+                        <div>
+                            <label class="control-label col-sm-3 pt0" for="name">开始日期</label>
+                            <div id="submit_start_time">{{ award.submit_start_time }}</div>
+                        </div>
+                        <br/>
+                        <div>
+                            <label class="control-label col-sm-3 pt0" for="name">结束日期</label>
+                            <div id="submit_end_time">{{ award.submit_end_time }}</div>
+                        </div>
+                        <br/>
 
                     </div>
                 </div>
             </div>
+            <div class="container-fluid mb0 " style="padding: 0px; margin-left: 10%">
+                <div class="row">
+                    <div class="col-md-7" style="width:60%!important;">
+                        <table class="table mb0 pr15 ranger-box2  ">
+                            <thead>
+                            <tr>
+                                <th>申报人/团队</th>
+                                <th>申报状态</th>
+                                <th>申报时间</th>
+                                <th>事迹介绍</th>
+                                <th>上传附件</th>
+                                <th>评语</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for form in forms %}
+                            <tr>
+                                <td>{{form.creator}}</td>
+                                <td>{{form.get_status_display}}</td>
+                                <td>{{form.created_time}}</td>
+                                <td>{{form.info}}</td>
+                                <td>{{form.extra_info}}</td>
+                                <td>{{form.comment}}</td>
+                                <td>
+                                    <a href="">查看</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+
+                            </tbody>
+                        </table>
+                        {% ifnotequal cur_page 1 %}
+                        <a id="page_up" href="?page={{cur_page|add:'-1'}}">
+                            上一页
+                        </a>
+                        {% endifnotequal %}
+                        第{{ cur_page }}/{{ allPage }}页
+                        {% ifnotequal cur_page allPage %}
+                        <a id="page_down" href="?page={{cur_page|add:'1'}}">
+                            下一页
+                        </a>
+                        {% endifnotequal %}
+                    </div>
+
+                </div>
+            </div>
         </div>
-        <!-- content end -->
     </div>
 </div>
 <script type="text/javascript">
-    $('#daterangepicker_demo2').daterangepicker({
-        locale: {
-            "format": 'YYYY/MM/DD'
-        }
-    });
-    $('#create').click(function () {
-        window.location.href = 'create/'
-    });
-    $('.delete').click(function () {
-        var d = dialog({
-            width: 260,
-            title: '提醒',
-            content: '是否确认删除此条奖项',
-            okValue: "确认",
-            ok: function () {
-                console.log(arguments)
-            },
-            cancelValue: '取消',
-            cancel: function () {
-                console.log(arguments)
-                return false;
-            },
-        });
-        d.show();
-    })
-
 
 </script>
 </body>

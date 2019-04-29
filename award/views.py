@@ -1,84 +1,139 @@
 # -*- coding: utf-8 -*-
-from django.http import HttpResponse
-from django.shortcuts import render, render_to_response
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from response import APIResult, APIServerError
+from home_application.models import Award, UserInfo, Organization, Form, Choice
 import json
-
-from django.template import RequestContext
-
-from home_application.models import Award, UserInfo, Choice
-from common.mymako import render_mako_context
 
 
 # Create your views here.
 
-# def index(request):
-#     """
-#         首页
-#     """
-#     return render_mako_context(request, '/award/award_index.html')
+def index(request):
+    try:
+        cur_page = int(request.GET.get('page', 1))
+        limit = int(request.GET.get('limit', 5))
+    except ValueError:
+        cur_page = 1
+        limit = 5
+    allAwardCounts = Award.objects.filter(is_delete=False).count()
+    allPage = allAwardCounts / limit
+    remain = allAwardCounts % limit
+    if remain > 0:
+        allPage += 1
+    offset = (cur_page - 1) * limit
+    awards = Award.objects.filter(is_delete=0)[offset: offset + limit]
+
+    return render(request, "award/award_index.html", {'awards': awards, 'allPage': allPage, 'cur_page': cur_page})
 
 
 def create(request):
     """
         新建奖项页面
     """
-    return render_mako_context(request, '/award/create_award.html')
+    levels = Choice.objects.all()
+    return render(request, 'award/create_award.html', {'levels': levels})
 
 
 def create_award(request):
     if request.method == 'POST':
         req = json.loads(request.body)
-        print req
         name = req["name"]
         requirement = req["requirement"]
         organization = req["organization"]
         level = Choice(id=req["level"])
         has_extra_info = req["has_extra_info"]
         status = bool(req["status"])
-        print status
         submit_start_time = req["submit_start_time"]
         submit_end_time = req["submit_end_time"]
-        try:
-            Award.objects.create(name=name, requirement=requirement, organization=organization
-                                 , level=level, has_extra_info=has_extra_info, status=status
-                                 , submit_start_time=submit_start_time, submit_end_time=submit_end_time)
-            response = {
-                "result": True,
-                "code": 0,
-                "data": {},
-                "message": "创建奖项成功"
-            }
-        except:
-            response = {
-                "result": False,
-                "code": 403,
-                "data": {},
-                "message": "创建奖项失败"
-            }
-        return HttpResponse(response)
+        response = {
+            "result": True,
+            "code": 0,
+            "data": {},
+            "message": "创建奖项成功"
+        }
+        Award.objects.create(name=name, requirement=requirement, organization=organization
+                             , level=level, has_extra_info=has_extra_info, status=status
+                             , submit_start_time=submit_start_time, submit_end_time=submit_end_time)
+
+        return APIResult(response)
     else:
-        return HttpResponse()
+        pass
 
 
-def index(request):
-    limit = 5
-    allAwardCounts = Award.objects.count()
-    allPage = allAwardCounts / limit
-    remain = allAwardCounts % limit
+def get_award(request):
+    try:
+        award_id = int(request.GET.get('award_id'))
+        cur_page = int(request.GET.get('page', 1))
+        limit = int(request.GET.get('limit', 5))
+    except ValueError:
+        award_id = 1
+        cur_page = 1
+        limit = 5
+    award = Award.objects.get(id=award_id)
+    all_form_counts = Form.objects.filter(award_id=award.id).count()
+    allPage = all_form_counts / limit
+    remain = all_form_counts % limit
     if remain > 0:
         allPage += 1
+    offset = (cur_page - 1) * limit
+    organization = Organization.objects.get(name=award.organization)
+    principal = organization.principal
+    forms = Form.objects.filter(award_id=award.id)[offset: offset + limit]
+    return render(request, "award/award_info.html",
+                  {'award': award, 'principal': principal, 'forms': forms, 'allPage': allPage, 'cur_page': cur_page})
+
+
+def delete_award(request):
     try:
-        curPage = int(request.GET.get('curPage', '1'))
-        pageType = str(request.GET.get('pageType', ''))
+        award_id = int(request.GET.get('award_id'))
     except ValueError:
-        curPage = 1
-        pageType = ''
+        award_id = 1
 
-    if pageType == 'pageDown':
-        curPage += 1
-    elif pageType == 'pageUp':
-        curPage -= 1
-    offSet = (curPage - 1) * limit
-    awards = Award.objects.all()[offSet: offSet + limit]
+    award = Award.objects.get(id=award_id)
+    award.is_delete = True
+    award.save()
+    return HttpResponseRedirect('/award/')
 
-    return render(request, "award/award_index.html", {'awards': awards, 'allPage': allPage, 'curPage': curPage})
+
+def edit_award(request):
+    try:
+        award_id = int(request.GET.get('award_id'))
+    except ValueError:
+        award_id = 1
+
+    award = Award.objects.get(id=award_id)
+    levels = Choice.objects.all()
+    return render(request, "award/edit_award.html", {'award': award, 'levels': levels})
+
+
+def update_award(request):
+    if request.method == 'POST':
+        req = json.loads(request.body)
+        id = int(req["id"])
+        name = req["name"]
+        requirement = req["requirement"]
+        organization = req["organization"]
+        level = Choice(id=req["level"])
+        has_extra_info = req["has_extra_info"]
+        status = bool(req["status"])
+        submit_start_time = req["submit_start_time"]
+        submit_end_time = req["submit_end_time"]
+        response = {
+            "result": True,
+            "code": 0,
+            "data": {},
+            "message": "修改奖项成功"
+        }
+        award = Award.objects.get(id=id)
+        award.name = name
+        award.requirement = requirement
+        award.organization = organization
+        award.level = level
+        award.has_extra_info = has_extra_info
+        award.status = status
+        award.submit_start_time = submit_start_time
+        award.submit_end_time = submit_end_time
+        award.save()
+        return APIResult(response)
+    else:
+        pass

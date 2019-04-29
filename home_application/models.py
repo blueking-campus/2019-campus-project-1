@@ -16,9 +16,10 @@ STATUS_CHOICES = (
 
 
 class UserInfo(models.Model):
-    id = models.AutoField(verbose_name=u'用户QQ信息id')
+    id = models.AutoField(verbose_name=u'用户QQ信息id', primary_key=True)
     auth_token = models.CharField(max_length=255, blank=True, default='', verbose_name=u'用户openId')
     qq = models.CharField(max_length=20, default='', verbose_name=u'用户QQ')
+    objects = models.Manager()
 
     class Meta:
         verbose_name = u'用户QQ信息'
@@ -29,8 +30,9 @@ class UserInfo(models.Model):
 
 
 class Permission(models.Model):
-    id = models.AutoField(verbose_name=u'用户权限id')
+    id = models.AutoField(verbose_name=u'用户权限id', primary_key=True)
     name = models.CharField(max_length=20, default='', verbose_name=u'用户权限名称')
+    objects = models.Manager()
 
     class Meta:
         verbose_name = u'用户权限'
@@ -41,9 +43,10 @@ class Permission(models.Model):
 
 
 class UserPermission(models.Model):
-    id = models.AutoField(verbose_name=u'用户权限code id')
+    id = models.AutoField(verbose_name=u'用户权限code id', primary_key=True)
     qq = models.CharField(max_length=20, default='', verbose_name=u'用户QQ')
     permission = models.ForeignKey(Permission, verbose_name=u'用户权限')
+    objects = models.Manager()
 
     class Meta:
         verbose_name = u'用户权限code'
@@ -54,8 +57,9 @@ class UserPermission(models.Model):
 
 
 class Choice(models.Model):
-    id = models.AutoField(verbose_name=u'项目级别id')
+    id = models.AutoField(verbose_name=u'项目级别id', primary_key=True)
     name = models.CharField(max_length=20, verbose_name=u'项目级别')
+    objects = models.Manager()
 
     class Meta:
         verbose_name = u'项目级别选项'
@@ -66,7 +70,7 @@ class Choice(models.Model):
 
 
 class Award(models.Model):
-    id = models.AutoField(verbose_name=u'奖项id')
+    id = models.AutoField(verbose_name=u'奖项id', primary_key=True)
     name = models.CharField(default='', max_length=50, verbose_name=u'奖项名字')
     requirement = models.TextField(default='', verbose_name=u'评奖条件')
     organization = models.CharField(default='', max_length=20, verbose_name=u'所属组织')
@@ -80,6 +84,7 @@ class Award(models.Model):
     submit_end_time = models.DateTimeField(verbose_name=u'结束日期')
     created_time = models.DateTimeField(verbose_name=u'创建时间', auto_now_add=True)
     updated_time = models.DateTimeField(verbose_name=u'更新时间', auto_now=True)
+    objects = models.Manager()
 
     class Meta:
         verbose_name = u'奖项'
@@ -90,7 +95,8 @@ class Award(models.Model):
 
 
 class Form(models.Model):
-    id = models.AutoField(verbose_name=u'申请表id')
+    form_id = models.AutoField(verbose_name=u'申请表id', primary_key=True)
+    award = models.ForeignKey(Award, verbose_name=u'奖项')
     creator = models.CharField(default='', max_length=200, verbose_name=u'申请者')
     info = models.TextField(default='', verbose_name=u'事迹介绍')
     extra_info = models.FileField(verbose_name=u'附件')
@@ -99,23 +105,25 @@ class Form(models.Model):
     comment = models.TextField(verbose_name=u'评语')
     created_time = models.DateTimeField(verbose_name=u'申请时间', auto_now_add=True)
     updated_time = models.DateTimeField(verbose_name=u'审批时间', auto_now=True)
+    objects = models.Manager()
 
     class Meta:
         verbose_name = u'申请表'
         verbose_name_plural = verbose_name
 
     def __unicode__(self):
-        return 'id: %d' % self.id
+        return 'id: %d' % self.form_id
 
 
 class Organization(models.Model):
-    id = models.AutoField(verbose_name=u'组织id')
+    id = models.AutoField(verbose_name=u'组织id', primary_key=True)
     name = models.CharField(default='', max_length=20, verbose_name=u'组织名称')
     principal = models.CharField(default='', max_length=20, verbose_name=u'负责人')
     users = models.TextField(verbose_name=u'用户')
     is_delete = models.BooleanField(default=False, verbose_name=u'是否被删除')
     created_time = models.DateTimeField(verbose_name=u'创建时间', auto_now_add=True)
     updated_time = models.DateTimeField(verbose_name=u'更新时间', auto_now=True)
+    objects = models.Manager()
 
     class Meta:
         verbose_name = u'组织'
