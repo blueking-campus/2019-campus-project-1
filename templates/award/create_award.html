@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <!-- 若您需要使用Kendo UI Professional，请联系版权人获得合法的授权或许可。 -->
+    <!-- Bootstrap css -->
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/bootstrap-3.3.4/css/bootstrap.min.css"
+          rel="stylesheet">
+    <!-- kendo ui css -->
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/kendoui-2015.2.624/styles/kendo.common.min.css"
+          rel="stylesheet">
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/kendoui-2015.2.624/styles/kendo.default.min.css"
+          rel="stylesheet">
+    <!-- font-awesome -->
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/fontawesome/css/font-awesome.css" rel="stylesheet">
+    <!--蓝鲸提供的公用样式库 -->
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/bk/css/bk.css" rel="stylesheet">
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/bk/css/bk_pack.css" rel="stylesheet">
+    <!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/js/jquery-1.10.2.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/echarts-2.0/echarts-all.js"></script>
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <!-- 包括所有kendoui的js插件或者可以根据需要使用的js插件调用　-->
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/kendoui-2015.2.624/js/kendo.all.min.js"></script>
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/echarts-2.0/echarts-all.js"></script>
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/bk/js/bk.js"></script>
+    <!-- 数据埋点统计 -->
+    <script src="http://magicbox.bk.tencent.com/static_api/analysis.js"></script>
+    <!-- 以下两个插件用于在IE8以及以下版本浏览器支持HTML5元素和媒体查询，如果不需要用可以移除 -->
+    <!--[if lt IE 9]>
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/js/html5shiv.min.js"></script>
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/js/respond.min.js"></script><![endif]-->
+    <!--时间控件-->
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/daterangepicker-2.0.5/daterangepicker.css"
+          rel="stylesheet">
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/daterangepicker-2.0.5/moment.min.js"></script>
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/daterangepicker-2.0.5/daterangepicker.js"></script>
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/datetimepicker/css/bootstrap-datetimepicker.min.css"
+          rel="stylesheet">
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/datetimepicker/js/bootstrap-datetimepicker.js"></script>
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/datetimepicker/js/locales/bootstrap-datetimepicker.zh-TW.js"
+            charset="UTF-8"></script>
+    <!--富文本-->
+    <script src="https://cdn.ckeditor.com/4.11.4/standard/ckeditor.js"></script>
+    <!--状态开关-->
+    <link href="https://cdn.bootcss.com/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.min.css"
+          rel="stylesheet">
+    <script src="https://cdn.bootcss.com/bootstrap-switch/3.3.4/js/bootstrap-switch.js"></script>
+    <!--下拉框-->
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/select2-3.5.2/select2.css" rel="stylesheet">
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/select2-3.5.2/select2.js"></script>
+    <style>
+        td {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body class="bg-white" data-bg-color="bg-white">
+<div class="king-page-box">
+    <div class="king-layout1-header">
+        <nav role="navigation" class="navbar navbar-default king-horizontal-nav3     f14">
+            <div class="nav-container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                            data-target="#bk-example-navbar-collapse-3">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="javascript:;">
+                        <img src="https://magicbox.bk.tencent.com/static_api/v3/bk/images/logo.png" alt="" class="logo">
+                    </a>
+                </div>
+                <div class="collapse navbar-collapse navbar-responsive-collapse" id="bk-example-navbar-collapse-3">
+                    <ul class="nav navbar-nav ">
+                        <!--<li :class="{'bk-cur':item.active}"  v-for="item in renderData.items">-->
+                        <li class="bk-cur"><a href="javascript:void(0);">奖项申报<span></span></a></li>
+                        <li><a href="javascript:void(0);">系统管理<span></span></a></li>
+                        <li><a href="javascript:void(0);">个人中心<span></span></a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="javascript:;">
+                                <img src="http://q1.qlogo.cn/g?b=qq&amp;nk=1181849919&amp;s=100&amp;t=1556272002"
+                                     onerror="javascript:this.src='/static/images/getheadimg.jpg';" width="30"
+                                     alt="Avatar" style="border-radius:50%;margin-right:10px;">
+                                <span>管理者 ( admin )</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="broadside" style="margin: 20px">
+        <!-- sidebar start -->
+        <div class="king-layout1-sidebar" style="width:200px;">
+            <nav style="overflow:hidden;">
+                <div class="king-vertical-nav9    f14">
+                    <div class="navbar-collapse navbar-hov">
+                        <ul class="nav navbar-nav side-nav">
+                            <li class="active">
+                                <a href="javascript:void(0);"> <i class="fa fa-dashboard "> </i>
+                                    <span>组织管理</span> <i class="fa fa-fw "></i> </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);"> <i class="fa fa-wrench "> </i>
+                                    <span>奖项信息</span> <i class="fa fa-fw "></i> </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <!-- sidebar end -->
+        <!-- content start -->
+        <div class="king-content-wrap" style="width: 1000px">
+            <div class="king-layout1-content" style="margin-left: 216px;">
+                <form class="form-horizontal">
+                    <div class="form-group clearfix ">
+                        <label class="col-sm-3 control-label bk-lh30 pt0" for="inputAwardName">奖项名称：</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control bk-valign-top" id="inputAwardName"
+                                   placeholder="提示信息"></div>
+                    </div>
+                    <div class="form-group has-feedback clearfix ">
+                        <label class="control-label col-sm-3 pt0">评奖条件：</label>
+                        <div class="col-sm-9">
+                            <textarea name="inputRequirement" id="inputRequirement"/></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix plugin3_demo" id="plugin3_demo2">
+                        <!-- select2 通过javascript start -->
+                        <label class="control-label col-sm-3 pt0">奖项级别：</label>
+                        &nbsp;&nbsp;
+                        <div class="select2-container select2_box" id="s2id_autogen3" style="width:300px;">
+                            <a href="javascript:void(0)" class="select2-choice" tabindex="-1"> <span
+                                    class="select2-chosen" id="select2-chosen-4">&nbsp;</span><abbr
+                                    class="select2-search-choice-close"></abbr> <span class="select2-arrow"
+                                                                                      role="presentation"><b
+                                    role="presentation"></b></span></a>
+                            <label for="s2id_autogen4" class="select2-offscreen"></label>
+                            <input class="select2-focusser select2-offscreen" type="text" aria-haspopup="true"
+                                   role="button" aria-labelledby="select2-chosen-4" id="s2id_autogen4">
+                            <div class="select2-drop select2-display-none select2-with-searchbox">
+                                <div class="select2-search">
+                                    <label for="inputLevel" class="select2-offscreen"></label>
+                                    <input type="text" autocomplete="off" autocorrect="off" autocapitalize="off"
+                                           spellcheck="false" class="select2-input" role="combobox" aria-expanded="true"
+                                           aria-autocomplete="list" aria-owns="select2-results-4"
+                                           id="inputLevel"
+                                           placeholder=""></div>
+                                <ul class="select2-results" role="listbox" id="select2-results-4"></ul>
+                            </div>
+                        </div>
+                        <input type="hidden" class="select2_box" style="width: 300px; display: none;" tabindex="-1"
+                               title="">
+                        <!-- select2 通过javascript end -->
+                    </div>
+                    <div class="form-group clearfix ">
+                        <label class="col-sm-3 control-label bk-lh30 pt0" for="inputOrganization">所属组织：</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control bk-valign-top" id="inputOrganization"></div>
+                    </div>
+                    <div class="form-group clearfix ">
+                        <label class="col-sm-3 control-label bk-lh30 pt0">开始日期：</label>
+                        <div class="input-group date" id="plugin9_demo1" data-date="2015-01-01T09:00:07Z"
+                             data-date-format="yyyy-mm-dd hh:ii" data-link-field="dtp_input1">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                            <input class="form-control" size="16" type="text" value="" placeholder="选择日期"
+                                   id="inputStartTime">
+                            <input type="hidden" id="dtp_input1" value="2015-01-09 10:25:07">
+                            <br>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix ">
+                        <label class="col-sm-3 control-label bk-lh30 pt0">结束日期：</label>
+                        <div class="input-group date" id="plugin9_demo2" data-date="2015-01-01T09:00:07Z"
+                             data-date-format="yyyy-mm-dd hh:ii" data-link-field="dtp_input1">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                            <input class="form-control" size="16" type="text" value="" placeholder="选择日期"
+                                   id="inputEndTime">
+                            <input type="hidden" id="dtp_input2" value="2015-01-09 10:25:07">
+                            <br>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix king-block-content">
+                        <label class="control-label col-sm-3 bk-lh30 pt0">是否上传附件：</label>
+                        <div class="switch switch-large">
+                            <input type="checkbox" class="checkbox" checked id='myCheck'/>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix ">
+                        <label class="control-label col-sm-3 bk-lh30 pt0">状态：</label>
+                        <div class="col-sm-9">
+                            <div class="radio pt0">
+                                <label class="mr10">
+                                    <input type="radio" name="status" class="bk-top5" value=True>
+                                    <span class="bk-lh30">生效</span>
+                                </label>
+                                <label class="mr10">
+                                    <input type="radio" name="status" class="bk-top5" value=False>
+                                    <span class="bk-lh30">过期</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix">
+                        <div class="col-sm-9 col-sm-offset-3">
+                            <button type="button" class="king-btn mr10  king-success" id="submit">提交</button>
+                            <button type="button" class="king-btn king-default ">取消</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- content end -->
+    </div>
+</div>
+<script type="text/javascript">
+    var bkArr = [{'id': 1,"text":"中心级"}, {'id': 2,"text":"部门级"}, {'id': 3, "text": "公司级"}];
+    $("#plugin3_demo2 .select2_box").select2({data: bkArr});
+    window.onload = function () {
+        CKEDITOR.replace('inputRequirement');
+        $('#myCheck').bootstrapSwitch();
+    };
+    $('#plugin9_demo1,#plugin9_demo2').datetimepicker({
+        language: 'zh-TW',
+        weekStart: 1,
+        todayBtn: true,
+        autoclose: true,
+        todayHighlight: true,
+        startView: 2,
+        forceParse: false,
+    });
+
+    $('#submit').click(function () {
+        name = document.getElementById('inputAwardName').value;
+        requirement = CKEDITOR.instances.inputRequirement.getData();
+        level = document.getElementById('select2-chosen-1').innerHTML;
+        organization = document.getElementById('inputOrganization').value;
+        submit_start_time = document.getElementById('inputStartTime').value;
+        submit_end_time = document.getElementById('inputEndTime').value;
+        has_extra_info = $('#myCheck').bootstrapSwitch('state');
+        status = $('input[name=status]:checked').val();
+        for (var i = 0; i< bkArr.length;i++){
+            if (level==bkArr[i]['text']){
+                level = bkArr[i]['id']
+            }
+        }
+        console.log(level)
+        data = {
+            'name': name,
+            'requirement': requirement,
+            'level': level,
+            'organization': organization,
+            'submit_start_time': submit_start_time,
+            'submit_end_time': submit_end_time,
+            'has_extra_info': has_extra_info,
+            'status': status
+        };
+        $.ajax({
+            url: "../api/create_award/",
+            type: "POST",
+            headers: {"X-CSRFToken": $.cookie('csrftoken')},  // 从Cookie取csrf_token，并设置ajax请求头
+            data: JSON.stringify(data),
+            success: function (data) {
+                console.log(data);
+                }
+            });
+    });
+
+</script>
+</body>
+
+</html>
