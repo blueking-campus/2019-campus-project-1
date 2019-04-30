@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+     <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <!-- 若您需要使用Kendo UI Professional，请联系版权人获得合法的授权或许可。 -->
+    <!-- Bootstrap css -->
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/bootstrap-3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <!-- kendo ui css -->
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/kendoui-2015.2.624/styles/kendo.common.min.css" rel="stylesheet">
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/kendoui-2015.2.624/styles/kendo.default.min.css" rel="stylesheet">
+    <!-- font-awesome -->
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/fontawesome/css/font-awesome.css" rel="stylesheet">
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/artDialog-6.0.4/css/ui-dialog.css" rel="stylesheet">
+    <!--蓝鲸提供的公用样式库 -->
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/bk/css/bk.css" rel="stylesheet">
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/bk/css/bk_pack.css" rel="stylesheet">
+    <!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/js/jquery-1.10.2.min.js"></script>
+    <!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/echarts-2.0/echarts-all.js"></script>
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/artDialog-6.0.4/dist/dialog-min.js"></script>
+    <!-- 包括所有kendoui的js插件或者可以根据需要使用的js插件调用　-->
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/kendoui-2015.2.624/js/kendo.all.min.js"></script>
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/echarts-2.0/echarts-all.js"></script>
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/bk/js/bk.js"></script>
+    <!-- 数据埋点统计 -->
+    <script src="http://magicbox.bk.tencent.com/static_api/analysis.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <!-- 以下两个插件用于在IE8以及以下版本浏览器支持HTML5元素和媒体查询，如果不需要用可以移除 -->
+    <!--[if lt IE 9]><script src="https://magicbox.bk.tencent.com/static_api/v3/assets/js/html5shiv.min.js"></script><script src="https://magicbox.bk.tencent.com/static_api/v3/assets/js/respond.min.js"></script><![endif]-->
+</head>
+
+<body class="bg-white" data-bg-color="bg-white">
+<div class="king-page-box">
+    <div class="king-layout1-header">
+        <nav role="navigation" class="navbar navbar-default king-horizontal-nav3     f14">
+            <div class="nav-container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bk-example-navbar-collapse-3">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="javascript:;">
+                        <img src="https://magicbox.bk.tencent.com/static_api/v3/bk/images/logo.png" alt="" class="logo"> </a>
+                </div>
+                <div class="collapse navbar-collapse navbar-responsive-collapse" id="bk-example-navbar-collapse-3">
+                    <ul class="nav navbar-nav ">
+                        <!--<li :class="{'bk-cur':item.active}"  v-for="item in renderData.items">-->
+                        <li class="bk-cur"> <a href="javascript:void(0);">奖项申报<span></span></a> </li>
+                        <li> <a href="javascript:void(0);">系统管理<span></span></a> </li>
+                        <li> <a href="javascript:void(0);">个人中心<span></span></a> </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="javascript:;">
+                                <img src="http://q1.qlogo.cn/g?b=qq&amp;nk=1181849919&amp;s=100&amp;t=1556272002" onerror="javascript:this.src='/static/images/getheadimg.jpg';" width="30" alt="Avatar" style="border-radius:50%;margin-right:10px;">
+                                <span>管理者 ( admin )</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="broadside" style="margin: 20px">
+        <!-- sidebar start -->
+        <div class="king-layout1-sidebar" style="width:200px;">
+            <nav style="overflow:hidden;">
+                <div class="king-vertical-nav9 f14">
+                    <div class="navbar-collapse navbar-hov">
+                        <ul class="nav navbar-nav side-nav">
+                            <li class="active">
+                                <a href="javascript:void(0);"> <i class="fa fa-dashboard "></i>
+                                    <span>组织管理</span> <i class="fa fa-fw "></i> </a>
+                                <ul id="demo" class="collapse"> </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);"> <i class="fa fa-wrench "></i>
+                                    <span>奖项信息</span> <i class="fa fa-fw "></i> </a>
+                                <ul id="demo" class="collapse"> </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <!-- sidebar end -->
+        <!-- content start -->
+        <div class="king-content-wrap">
+            <div class="king-layout1-content" style="margin-left: 230px;">
+                <!-- <div class="king-page-topbar pl20 pr20 {{ marginStyle }}"> -->
+                <div class="king-page-topbar ">
+                    <ul class="breadcrumb king-breadcrumb pl0 bg-transparent">
+                        <li><a href="javascript:void(0);">系统管理</a></li>
+                        <li><a href="../">单位管理</a></li>
+                        <li><a href="javascript:void(0);">单位详情</a></li>
+                    </ul>
+                </div>
+                <!-- 面板 编辑 开始 -->
+                <!-- 面板 编辑 结束 -->
+                </div>
+        </div>
+        <div class="king-content-wrap">
+            <div class="king-layout1-content" style="margin-left: 216px;">
+                <div class="panel king-panel1 mb0  ">
+                    <div class="form-group clearfix ">
+                        <label class="col-sm-2 control-label bk-lh30 pt0">所属组织：</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control bk-valign-top" id="name" disabled="disabled" value="{{ name }}"></div>
+                    </div>
+                    <div class="form-group clearfix ">
+                        <label class="col-sm-2 control-label bk-lh30 pt0">负责人员：</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control bk-valign-top" id="principal" disabled="disabled" value="{{ principal }}"></div>
+                    </div>
+                    <div class="form-group has-feedback clearfix ">
+                        <label class="control-label col-sm-2 pt0" for="introduction">参评人员：</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control" rows="8" id="users" disabled="disabled">{{ users }}</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group has-feedback clearfix ">
+                        <label class="control-label col-sm-2 pt0" for="name">更新人</label>
+                        <div id="updater" class="col-sm-9">{{ updater }}</div>
+                    </div>
+                    <br/>
+                    <div class="form-group has-feedback clearfix ">
+                        <label class="control-label col-sm-2 pt0" for="name">更新时间</label>
+                        <div id="level" class="col-sm-9">{{ updated_time }}</div>
+                    </div>
+                    <br/>
+                </div>
+                <form class="form-horizontal">
+                    <div class="form-group clearfix">
+                        <div class="col-sm-9 col-sm-offset-3">
+                            <button type="button" class="king-btn mr10  king-success" id="modifyBtn">修改</button>
+                            <button type="button" class="king-btn king-default " id="saveBtn">保存</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- content end -->
+    </div>
+</div>
+<script>
+    $("#saveBtn").hide()
+    var str=location.href;
+    var num=str.indexOf("?")
+    str=str.substr(num+1); //取得所有参数   stringvar.substr(start [, length ]
+    var arr=str.split("&");
+    var organization_id = (arr[0].split("="))[1];
+    $("#modifyBtn").click(function () {
+        $("#saveBtn").show()
+        $("#name").attr("disabled",false);
+        $("#principal").attr("disabled",false);
+        $("#users").attr("disabled",false);
+    })
+    $("#saveBtn").click(function () {
+            let name = $("#name").val();
+            let principal = $("#principal").val();
+            let users = $("#users").val();
+            let result = {
+                id:organization_id,
+                name:name,
+                principal:principal,
+                users:users,
+                update_time:new Date()
+            }
+            console.log(result)
+            $.ajax({
+                type: "POST",
+                url: "../update_organization/",
+                data: JSON.stringify(result),
+                headers: {"X-CSRFToken": $.cookie('csrftoken')},// 从Cookie取csrf_token，并设置ajax请求头
+                success: function (result) {
+                    alert("修改成功！")
+                    window.location.reload()
+                }
+            })
+        })
+</script>
+</body>
+
+</html>

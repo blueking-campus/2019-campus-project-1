@@ -26,8 +26,7 @@ def get_organizations(request):
     organizations = Organization.objects.all()
     data = {}
     if request.method == "GET":
-        current_page = request.GET.get('page', 1)
-        # current_page = 1
+        current_page = int(request.GET.get('page', 1))
         paginator = Paginator(organizations, 5)
         page_num = paginator.num_pages
         try:
@@ -87,10 +86,10 @@ def new_organization(request):
 
 @require_POST
 def update_organization(request):
-    result = json.loads(request.body)
-    organization_id = int(result['id'])
-    verified_organization(result)
     try:
+        result = json.loads(request.body)
+        organization_id = int(result['id'])
+        verified_organization(result)
         organization = Organization.objects.filter(id=organization_id)
         if organization.exists():
             organization.update(name=result['name'])
@@ -103,8 +102,9 @@ def update_organization(request):
 
 
 def delete_organization(request):
-    organization_id = int(request.GET.get('id'))
     try:
+        result = json.loads(request.body)
+        organization_id = int(result['id'])
         organization = Organization.objects.filter(id=organization_id)
         organization.delete()
     except Exception as e:
@@ -116,11 +116,14 @@ def get_organization(request):
     try:
         organization_id = request.GET.get('id')
         organization = Organization.objects.get(id=organization_id)
-        # data = {
-        #     'name': organization.name,
-        #     'principal': organization.principal,
-        #     'users': organization.users
-        # }
+        data = {
+            'id': organization.id,
+            'name': organization.name,
+            'principal': organization.principal,
+            'users': organization.users,
+            'updater': organization.updater,
+            'updated_time': organization.updated_time
+        }
     except Exception as e:
         return APIServerError(e.message)
-    return render(request, 'organization/organization.html', {'organization': organization})
+    return render(request, 'organization/organization_info.html', data)

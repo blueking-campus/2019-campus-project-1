@@ -31,8 +31,12 @@
     <!-- 数据埋点统计 -->
     <script src="http://magicbox.bk.tencent.com/static_api/analysis.js"></script>
     <script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <!-- 以下两个插件用于在IE8以及以下版本浏览器支持HTML5元素和媒体查询，如果不需要用可以移除 -->
     <!--[if lt IE 9]><script src="https://magicbox.bk.tencent.com/static_api/v3/assets/js/html5shiv.min.js"></script><script src="https://magicbox.bk.tencent.com/static_api/v3/assets/js/respond.min.js"></script><![endif]-->
+    <style>
+
+    </style>
 </head>
 
 <body class="bg-white" data-bg-color="bg-white">
@@ -82,7 +86,7 @@
                                 <ul id="demo" class="collapse"> </ul>
                             </li>
                             <li>
-                                <a href="javascript:void(0);"> <i class="fa fa-wrench ">                            </i>
+                                <a href="javascript:void(0);"> <i class="fa fa-wrench "></i>
                                     <span>奖项信息</span> <i class="fa fa-fw "></i> </a>
                                 <ul id="demo" class="collapse"> </ul>
                             </li>
@@ -106,7 +110,6 @@
                 <!-- 面板 编辑 结束 -->
                 <form class="form-horizontal">
                     <div class="form-group clearfix" style="margin-left: 800px">
-{#                        <button type="button" class="king-btn mr10  king-info" id="newBtn" data-target="#myModal">新增</button>#}
                         <button type="button" class="king-btn mr10  king-info" id="newBtn" data-toggle="modal" data-target="#myModal"> 新增</button>
                         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -179,8 +182,8 @@
                                 <td>{{ organization.updater }}</td>
                                 <td>{{ organization.updated_time }}</td>
                                 <td>
-                                    <a href="#" onclick="queryPro({{ organization.id }})" id="detailBtn" data-toggle="modal" data-target="#myModal">查看</a>
-                                    <a href="delete_organization/?id={{ organization.id }}" >删除</a>
+                                    <a href="get_organization/?id={{ organization.id }}" id="detailBtn">查看</a>
+                                    <a href="#" onclick="Delete({{ organization.id }})" id="deleteBtn">删除</a>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -236,59 +239,26 @@
                 data: JSON.stringify(result),
                 headers: {"X-CSRFToken": $.cookie('csrftoken')},// 从Cookie取csrf_token，并设置ajax请求头
                 success: function (result) {
-
+                    alert("保存成功！")
+                    window.location.reload()
                 }
             })
         })
-        $("#modifyBtn").click(function () {
-            let name = $("#name").val();
-            let principal = $("#principal").val();
-            let users = $("#users").val();
-            let result = {
-                id:organization_id,
-                name:name,
-                principal:principal,
-                users:users
+        function Delete(id) {
+            data = {
+                'id': id
             }
             $.ajax({
                 type: "POST",
-                url: "./update_organization/",
-                data: JSON.stringify(result),
+                url: "./delete_organization/",
+                data: JSON.stringify(data),
                 headers: {"X-CSRFToken": $.cookie('csrftoken')},// 从Cookie取csrf_token，并设置ajax请求头
                 success: function (result) {
+                    alert("删除成功！")
+                    window.location.reload()
                 }
             })
-        })
-        {#function detail(id){#}
-        {#    localStorage.detailId = id#}
-        {#}#}
-        var organization_id = localStorage.detailId;
-        $("#detailBtn").click(function () {
-            $("#saveBtn").hide()
-        })
-        function queryPro(id) {
-            localStorage.detailId = id
-            $.ajax({
-                url: "./get_organization/",
-                async: true,
-                type: "GET",
-                data: {
-                    "id": id
-                },
-                // 成功后开启模态框
-                success: showQuery,
-                dataType: "json"
-            });
         }
-
-        function showQuery(data) {
-            $("#name").val(data.name);
-            $("#principal").val(data.principal);
-            $("#users").val(data.users);
-            $("#myModal").modal('show');
-        }
-
-
     </script>
 
 </body>
