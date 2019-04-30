@@ -5,7 +5,7 @@ __pycache__/
 
 # C extensions
 *.so
-
+.idea/
 # Distribution / packaging
 .Python
 build/
@@ -123,7 +123,7 @@ dmypy.json
 .pyre/
 
 # Pycharm
-..idea/
+.idea
 
 # subversion
 .svn/

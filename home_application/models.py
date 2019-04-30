@@ -5,6 +5,7 @@
 
 # import from lib
 from django.db import models
+from account.models import BkUser
 
 STATUS_CHOICES = (
     (0, u'申报中'),
@@ -95,7 +96,7 @@ class Award(models.Model):
 
 
 class Form(models.Model):
-    form_id = models.AutoField(verbose_name=u'申请表id', primary_key=True)
+    id = models.AutoField(verbose_name=u'申请表id', primary_key=True)
     award = models.ForeignKey(Award, verbose_name=u'奖项')
     creator = models.CharField(default='', max_length=200, verbose_name=u'申请者')
     info = models.TextField(default='', verbose_name=u'事迹介绍')
@@ -120,6 +121,7 @@ class Organization(models.Model):
     name = models.CharField(default='', max_length=20, verbose_name=u'组织名称')
     principal = models.CharField(default='', max_length=20, verbose_name=u'负责人')
     users = models.TextField(verbose_name=u'用户')
+    updater = models.ForeignKey(BkUser, verbose_name=u'更新者')
     is_delete = models.BooleanField(default=False, verbose_name=u'是否被删除')
     created_time = models.DateTimeField(verbose_name=u'创建时间', auto_now_add=True)
     updated_time = models.DateTimeField(verbose_name=u'更新时间', auto_now=True)
@@ -131,3 +133,23 @@ class Organization(models.Model):
 
     def __unicode__(self):
         return 'id: %d name: %s' % (self.id, self.name)
+
+    @staticmethod
+    def to_array(organization_list):
+        return [{
+            'id': organization.id,
+            'name': organization.name,
+            'principal': organization.principal,
+            'users': organization.users,
+            'updater': organization.updater,
+            'updated_time': organization.updated_time.strftime("%Y-%m-%d %H:%M:%S")
+        } for organization in organization_list]
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'principal': self.principal,
+            'users': self.users,
+            'updater': self.updater,
+            'updated_time': self.created_time.strftime("%Y-%m-%d %H:%M:%S")}
