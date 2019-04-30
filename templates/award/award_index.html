@@ -69,8 +69,8 @@
                 <div class="collapse navbar-collapse navbar-responsive-collapse" id="bk-example-navbar-collapse-3">
                     <ul class="nav navbar-nav ">
                         <!--<li :class="{'bk-cur':item.active}"  v-for="item in renderData.items">-->
-                        <li class="bk-cur"><a href="javascript:void(0);">奖项申报<span></span></a></li>
-                        <li><a href="javascript:void(0);">系统管理<span></span></a></li>
+                        <li><a href="javascript:void(0);">奖项申报<span></span></a></li>
+                        <li class="bk-cur"><a href="javascript:void(0);">系统管理<span></span></a></li>
                         <li><a href="javascript:void(0);">个人中心<span></span></a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
@@ -120,8 +120,8 @@
                 </div>
                 <!-- 面板 编辑 开始 -->
                 <!-- 面板 编辑 结束 -->
-                <div class="row" style="height: 44px; margin: 10px 5px 0px">
-                    <form class="form-inline">
+                <div class="row" style="height: 100%; margin: 10px 5px 0px;">
+                    <form class="form-inline" style="font-size: 10px">
                         <div class="form-group mr10">
                             <label for="inputAwardName">申报奖项：</label>
                             <input type="text" class="form-control" id="inputAwardName">
@@ -144,6 +144,7 @@
                         <input type="text" class="form-control daterangepicker_demo" id="daterangepicker_demo2"
                                placeholder="选择日期..." style="width: 175px">
                         &nbsp;&nbsp;
+                        <br/><br/>
                         <button type="button" class="king-btn-demo king-btn king-round king-info">查询</button>
                         &nbsp;&nbsp;
                         <button type="button" class="king-btn-demo king-btn king-round king-info">批量克隆</button>
@@ -154,7 +155,7 @@
                 </div>
                 <div class="container-fluid mb0 " style="padding: 0px">
                     <div class="row">
-                        <div class="col-md-7" style="width:80%!important;">
+                        <div class="col-md-7" style="width:100%!important;">
                             <table class="table mb0 pr15 ranger-box2  ">
                                 <thead>
                                 <tr>
@@ -232,12 +233,11 @@
             content: '是否确认删除此条奖项',
             okValue: "确认",
             ok: function () {
-                console.log(arguments)
+
             },
             cancelValue: '取消',
             cancel: function () {
-                console.log(arguments)
-                return false;
+
             },
         });
         d.show();

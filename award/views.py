@@ -9,12 +9,8 @@ import json
 # Create your views here.
 
 def index(request):
-    try:
-        cur_page = int(request.GET.get('page', 1))
-        limit = int(request.GET.get('limit', 5))
-    except ValueError:
-        cur_page = 1
-        limit = 5
+    cur_page = int(request.GET.get('page', 1))
+    limit = int(request.GET.get('limit', 5))
     allAwardCounts = Award.objects.filter(is_delete=False).count()
     allPage = allAwardCounts / limit
     remain = allAwardCounts % limit
@@ -27,16 +23,22 @@ def index(request):
 
 
 def create(request):
-    """
-        新建奖项页面
-    """
     levels = Choice.objects.all()
     return render(request, 'award/create_award.html', {'levels': levels})
 
 
 def create_award(request):
     if request.method == 'POST':
-        req = json.loads(request.body)
+        try:
+            req = json.loads(request.body)
+        except:
+            response = {
+                "result": False,
+                "code": 400,
+                "data": {},
+                "message": "创建奖项失败"
+            }
+            return APIServerError(response)
         name = req["name"]
         requirement = req["requirement"]
         organization = req["organization"]
@@ -61,15 +63,10 @@ def create_award(request):
 
 
 def get_award(request):
-    try:
-        award_id = int(request.GET.get('award_id'))
-        cur_page = int(request.GET.get('page', 1))
-        limit = int(request.GET.get('limit', 5))
-    except ValueError:
-        award_id = 1
-        cur_page = 1
-        limit = 5
-    award = Award.objects.get(id=award_id)
+    award_id = int(request.GET.get('award_id', 1))
+    cur_page = int(request.GET.get('page', 1))
+    limit = int(request.GET.get('limit', 5))
+    award = Award.objects.filter(id=award_id).first()
     all_form_counts = Form.objects.filter(award_id=award.id).count()
     allPage = all_form_counts / limit
     remain = all_form_counts % limit
@@ -84,31 +81,32 @@ def get_award(request):
 
 
 def delete_award(request):
-    try:
-        award_id = int(request.GET.get('award_id'))
-    except ValueError:
-        award_id = 1
-
-    award = Award.objects.get(id=award_id)
+    award_id = int(request.GET.get('award_id', 1))
+    award = Award.objects.filter(id=award_id).first()
     award.is_delete = True
     award.save()
     return HttpResponseRedirect('/award/')
 
 
 def edit_award(request):
-    try:
-        award_id = int(request.GET.get('award_id'))
-    except ValueError:
-        award_id = 1
-
-    award = Award.objects.get(id=award_id)
+    award_id = int(request.GET.get('award_id', 1))
+    award = Award.objects.filter(id=award_id)
     levels = Choice.objects.all()
     return render(request, "award/edit_award.html", {'award': award, 'levels': levels})
 
 
 def update_award(request):
     if request.method == 'POST':
-        req = json.loads(request.body)
+        try:
+            req = json.loads(request.body)
+        except:
+            response = {
+                "result": False,
+                "code": 400,
+                "data": {},
+                "message": "编辑奖项失败"
+            }
+            return APIServerError(response)
         id = int(req["id"])
         name = req["name"]
         requirement = req["requirement"]
@@ -118,13 +116,8 @@ def update_award(request):
         status = bool(req["status"])
         submit_start_time = req["submit_start_time"]
         submit_end_time = req["submit_end_time"]
-        response = {
-            "result": True,
-            "code": 0,
-            "data": {},
-            "message": "修改奖项成功"
-        }
-        award = Award.objects.get(id=id)
+
+        award = Award.objects.filter(id=id)
         award.name = name
         award.requirement = requirement
         award.organization = organization
@@ -134,6 +127,12 @@ def update_award(request):
         award.submit_start_time = submit_start_time
         award.submit_end_time = submit_end_time
         award.save()
+        response = {
+            "result": True,
+            "code": 0,
+            "data": {},
+            "message": "修改奖项成功"
+        }
         return APIResult(response)
     else:
         pass
