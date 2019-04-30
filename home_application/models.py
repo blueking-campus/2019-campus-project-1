@@ -128,17 +128,14 @@ class Organization(models.Model):
 
     @staticmethod
     def to_array(organization_list):
-        results = []
-        for organization in organization_list:
-            results.append({
-                'id': organization.id,
-                'name': organization.name,
-                'principal': organization.principal,
-                'users': organization.users,
-                'updater': organization.updater,
-                'updated_time': organization.updated_time.strftime("%Y-%m-%d %H:%M:%S")
-            })
-        return results
+        return [{
+            'id': organization.id,
+            'name': organization.name,
+            'principal': organization.principal,
+            'users': organization.users,
+            'updater': organization.updater,
+            'updated_time': organization.updated_time.strftime("%Y-%m-%d %H:%M:%S")
+        } for organization in organization_list]
 
     def to_json(self):
         return {

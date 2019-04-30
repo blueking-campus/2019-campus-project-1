@@ -1,56 +1,73 @@
 # -*- coding: utf-8 -*-
 import json
-import re
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger, InvalidPage
+from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
-from django.views.generic.base import View
 
-from common.mymako import render_mako_context, render_json
+from common.mymako import render_mako_context
 from home_application.models import Organization
-from home_application.response import APIResult
+from home_application.response import APIResult, APIServerError
 from organization.utils import verified_organization
 
 
-@csrf_protect
-def organization_home(request):
-    # data = {}
-    # if show_organizations.code == 0:
-    data = show_organizations.data
-    return render_mako_context(request, 'organization/organization.html', {'data': data})
+def home(request):
+    count = 5
+    real_page = Organization.objects.all().count()/5+1
+    if real_page < 5:
+        count = real_page
+    return render(request, 'organization/organization.html', {'count': range(1, count+1)})
 
 
 @csrf_protect
-@require_GET
-def show_organizations(request):
+def get_organizations(request):
     organizations = Organization.objects.all()
-    paginator = Paginator(organizations, 5)
     data = {}
     if request.method == "GET":
-        current_page = int(request.GET.get('page', 1))
+        current_page = request.GET.get('page', 1)
+        # current_page = 1
+        paginator = Paginator(organizations, 5)
+        page_num = paginator.num_pages
         try:
             organization_list = paginator.page(current_page)
-        except PageNotAnInteger:
-            # 如果请求的不是整数，返回第一页
-            organization_list = paginator.page(1)
-        except EmptyPage:
-            # 如果请求的页数不在合法的页数范围内，返回结果的最后一页
-            organization_list = paginator.page(paginator.num_pages)
+            if organization_list.has_next():
+                next_page = current_page+1
+            else:
+                next_page = current_page
+            if organization_list.has_previous():
+                previous_page = current_page-1
+            else:
+                previous_page = current_page
+            data = {
+                'count': paginator.count,
+                'page_num': range(1, page_num + 1),
+                'current_page': current_page,
+                'next_page': next_page,
+                'previous_page': previous_page,
+                'results': organization_list
+            }
         except InvalidPage:
             # 如果请求的页数不存在，重定向页面
             return HttpResponse('找不到页面的内容！')
-        data = {
-            'count': paginator.count,
-            'results': Organization.to_array(organization_list)
-        }
-    # return APIResult(0, data, "返回所有组织成功！")
-    return render_mako_context(request, 'organization/organization.html', {'data': data})
+    return render(request, 'organization/organization.html', data)
+    # data = {}
+    # if request.method == "GET":
+    #     page = int(request.GET.get('page'), 1)
+    #     limit = 5
+    #     offset = (page - 1) * limit
+    #     query_set = organizations[offset:limit+offset]
+    #     count = query_set[offset:limit+offset].count()
+    #     data = {
+    #         'count': count,
+    #         'curr_page': page,
+    #
+    #         'results': Organization.to_array(query_set)
+    #     }
+    # return render(request, 'organization/organization.html', data)
 
 
-@require_POST
 @csrf_exempt
 def new_organization(request):
     try:
@@ -64,39 +81,46 @@ def new_organization(request):
                                     users=result['users'],
                                     updater=request.user)
     except Exception as e:
-        return APIResult(400, message=e.message)
-    return APIResult(0, u"创建组织成功！")
+        return APIServerError(e.message)
+    return render(request, 'organization/organization.html')
 
 
 @require_POST
-def update_organization(request, organization_id):
-    try:
-        result = json.dumps(request.body)
-        verified_organization(result)
-    except Exception as e:
-        return HttpResponse(status=422, content=u'%s' % e.message)
+def update_organization(request):
+    result = json.loads(request.body)
+    organization_id = int(result['id'])
+    verified_organization(result)
     try:
         organization = Organization.objects.filter(id=organization_id)
-        organization.name = result['name']
-        organization.principal = result['principal']
-        organization.users = result['users']
-        organization.updater = request.user
-        organization.save()
+        if organization.exists():
+            organization.update(name=result['name'])
+            organization.update(principal=result['principal'])
+            organization.update(users=result['users'])
+            organization.update(updater=request.user)
     except Exception as e:
-        return APIResult(400, message=e.message)
+        return APIServerError(e.message)
+    return render(request, 'organization/organization.html')
 
 
-def del_organization(request, organization_id):
+def delete_organization(request):
+    organization_id = int(request.GET.get('id'))
     try:
-        Organization.objects.filter(id=organization_id).delete()
+        organization = Organization.objects.filter(id=organization_id)
+        organization.delete()
     except Exception as e:
-        return APIResult(410, message=e.message)
-    return APIResult(204, "删除成功！")
+        return APIServerError(e.message)
+    return render(request, 'organization/organization.html')
 
 
-# def get_organization(request, organization_id):
-#     try:
-#         organization = Organization.objects.get(id=organization_id)
-#     except Exception as e:
-#         return APIResult(404, e.message)
-#     return APIResult()
+def get_organization(request):
+    try:
+        organization_id = request.GET.get('id')
+        organization = Organization.objects.get(id=organization_id)
+        # data = {
+        #     'name': organization.name,
+        #     'principal': organization.principal,
+        #     'users': organization.users
+        # }
+    except Exception as e:
+        return APIServerError(e.message)
+    return render(request, 'organization/organization.html', {'organization': organization})
