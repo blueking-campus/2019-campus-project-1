@@ -96,7 +96,7 @@ class Award(models.Model):
 
 
 class Form(models.Model):
-    id = models.AutoField(verbose_name=u'申请表id', primary_key=True)
+    form_id = models.AutoField(verbose_name=u'申请表id', primary_key=True)
     award = models.ForeignKey(Award, verbose_name=u'奖项')
     creator = models.CharField(default='', max_length=200, verbose_name=u'申请者')
     info = models.TextField(default='', verbose_name=u'事迹介绍')
