@@ -99,7 +99,7 @@
                 <div class="king-page-topbar ">
                     <ul class="breadcrumb king-breadcrumb pl0 bg-transparent">
                         <li><a href="javascript:void(0);">系统管理</a></li>
-                        <li><a href="../">单位管理</a></li>
+                        <li><a href="/organization">单位管理</a></li>
                         <li><a href="javascript:void(0);">单位详情</a></li>
                     </ul>
                 </div>
@@ -172,9 +172,8 @@
                 name:name,
                 principal:principal,
                 users:users,
-                update_time:new Date()
+                updated_time:new Date()
             }
-            console.log(result)
             $.ajax({
                 type: "POST",
                 url: "../update_organization/",

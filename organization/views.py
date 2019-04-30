@@ -13,14 +13,6 @@ from home_application.response import APIResult, APIServerError
 from organization.utils import verified_organization
 
 
-def home(request):
-    count = 5
-    real_page = Organization.objects.all().count()/5+1
-    if real_page < 5:
-        count = real_page
-    return render(request, 'organization/organization.html', {'count': range(1, count+1)})
-
-
 @csrf_protect
 def get_organizations(request):
     organizations = Organization.objects.all()
@@ -51,20 +43,6 @@ def get_organizations(request):
             # 如果请求的页数不存在，重定向页面
             return HttpResponse('找不到页面的内容！')
     return render(request, 'organization/organization.html', data)
-    # data = {}
-    # if request.method == "GET":
-    #     page = int(request.GET.get('page'), 1)
-    #     limit = 5
-    #     offset = (page - 1) * limit
-    #     query_set = organizations[offset:limit+offset]
-    #     count = query_set[offset:limit+offset].count()
-    #     data = {
-    #         'count': count,
-    #         'curr_page': page,
-    #
-    #         'results': Organization.to_array(query_set)
-    #     }
-    # return render(request, 'organization/organization.html', data)
 
 
 @csrf_exempt
@@ -96,6 +74,7 @@ def update_organization(request):
             organization.update(principal=result['principal'])
             organization.update(users=result['users'])
             organization.update(updater=request.user)
+            organization.update(updated_time=result['updated_time'])
     except Exception as e:
         return APIServerError(e.message)
     return render(request, 'organization/organization.html')
