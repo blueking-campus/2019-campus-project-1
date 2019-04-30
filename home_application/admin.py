@@ -5,8 +5,10 @@
 
 # import from lib
 # ===============================================================================
-# from django.contrib import admin
-# from apps.__.models import aaaa
-#
-# admin.site.register(aaaa)
+from django.contrib import admin
+from models import Choice, Permission, Organization
+
+admin.site.register(Choice)
+admin.site.register(Permission)
+admin.site.register(Organization)
 # ===============================================================================
