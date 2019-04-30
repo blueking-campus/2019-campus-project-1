@@ -121,7 +121,7 @@ class Organization(models.Model):
     name = models.CharField(default='', max_length=20, verbose_name=u'组织名称')
     principal = models.CharField(default='', max_length=20, verbose_name=u'负责人')
     users = models.TextField(verbose_name=u'用户')
-    updater = models.ForeignKey(BkUser, verbose_name=u'更新者')
+    updater = models.ForeignKey(UserInfo, verbose_name=u'更新者')
     is_delete = models.BooleanField(default=False, verbose_name=u'是否被删除')
     created_time = models.DateTimeField(verbose_name=u'创建时间', auto_now_add=True)
     updated_time = models.DateTimeField(verbose_name=u'更新时间', auto_now=True)

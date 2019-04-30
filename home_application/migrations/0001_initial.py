@@ -2,13 +2,11 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-from django.conf import settings
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
@@ -46,7 +44,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Form',
             fields=[
-                ('id', models.AutoField(serialize=False, verbose_name='\u7533\u8bf7\u8868id', primary_key=True)),
+                ('form_id', models.AutoField(serialize=False, verbose_name='\u7533\u8bf7\u8868id', primary_key=True)),
                 ('creator', models.CharField(default=b'', max_length=200, verbose_name='\u7533\u8bf7\u8005')),
                 ('info', models.TextField(default=b'', verbose_name='\u4e8b\u8ff9\u4ecb\u7ecd')),
                 ('extra_info', models.FileField(upload_to=b'', verbose_name='\u9644\u4ef6')),
@@ -55,6 +53,7 @@ class Migration(migrations.Migration):
                 ('comment', models.TextField(verbose_name='\u8bc4\u8bed')),
                 ('created_time', models.DateTimeField(auto_now_add=True, verbose_name='\u7533\u8bf7\u65f6\u95f4')),
                 ('updated_time', models.DateTimeField(auto_now=True, verbose_name='\u5ba1\u6279\u65f6\u95f4')),
+                ('award', models.ForeignKey(verbose_name='\u5956\u9879', to='home_application.Award')),
             ],
             options={
                 'verbose_name': '\u7533\u8bf7\u8868',
@@ -71,7 +70,6 @@ class Migration(migrations.Migration):
                 ('is_delete', models.BooleanField(default=False, verbose_name='\u662f\u5426\u88ab\u5220\u9664')),
                 ('created_time', models.DateTimeField(auto_now_add=True, verbose_name='\u521b\u5efa\u65f6\u95f4')),
                 ('updated_time', models.DateTimeField(auto_now=True, verbose_name='\u66f4\u65b0\u65f6\u95f4')),
-                ('updater', models.ForeignKey(verbose_name='\u66f4\u65b0\u8005', to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'verbose_name': '\u7ec4\u7ec7',
@@ -112,6 +110,11 @@ class Migration(migrations.Migration):
                 'verbose_name': '\u7528\u6237\u6743\u9650code',
                 'verbose_name_plural': '\u7528\u6237\u6743\u9650code',
             },
+        ),
+        migrations.AddField(
+            model_name='organization',
+            name='updater',
+            field=models.ForeignKey(verbose_name='\u66f4\u65b0\u8005', to='home_application.UserInfo'),
         ),
         migrations.AddField(
             model_name='award',
