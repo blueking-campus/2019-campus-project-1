@@ -66,7 +66,15 @@ def get_award(request):
     award_id = int(request.GET.get('award_id', 1))
     cur_page = int(request.GET.get('page', 1))
     limit = int(request.GET.get('limit', 5))
-    award = Award.objects.filter(id=award_id).first()
+    try:
+        award = Award.objects.get(id=award_id)
+    except:
+        return APIServerError({
+            "result": False,
+            "code": 400,
+            "data": {},
+            "message": "get award id error"
+        })
     all_form_counts = Form.objects.filter(award_id=award.id).count()
     allPage = all_form_counts / limit
     remain = all_form_counts % limit
@@ -82,7 +90,15 @@ def get_award(request):
 
 def delete_award(request):
     award_id = int(request.GET.get('award_id', 1))
-    award = Award.objects.filter(id=award_id).first()
+    try:
+        award = Award.objects.get(id=award_id)
+    except:
+        return APIServerError({
+            "result": False,
+            "code": 400,
+            "data": {},
+            "message": "get award id error"
+        })
     award.is_delete = True
     award.save()
     return HttpResponseRedirect('/award/')
@@ -90,7 +106,15 @@ def delete_award(request):
 
 def edit_award(request):
     award_id = int(request.GET.get('award_id', 1))
-    award = Award.objects.filter(id=award_id)
+    try:
+        award = Award.objects.get(id=award_id)
+    except:
+        return APIServerError({
+            "result": False,
+            "code": 400,
+            "data": {},
+            "message": "get award id error"
+        })
     levels = Choice.objects.all()
     return render(request, "award/edit_award.html", {'award': award, 'levels': levels})
 
@@ -117,7 +141,15 @@ def update_award(request):
         submit_start_time = req["submit_start_time"]
         submit_end_time = req["submit_end_time"]
 
-        award = Award.objects.filter(id=id)
+        try:
+            award = Award.objects.get(id=id)
+        except:
+            return APIServerError({
+                "result": False,
+                "code": 400,
+                "data": {},
+                "message": "get award id error"
+            })
         award.name = name
         award.requirement = requirement
         award.organization = organization
