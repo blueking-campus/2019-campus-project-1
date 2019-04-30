@@ -113,7 +113,7 @@ class Form(models.Model):
         verbose_name_plural = verbose_name
 
     def __unicode__(self):
-        return 'id: %d' % self.form_id
+        return 'id: %d' % self.id
 
 
 class Organization(models.Model):
