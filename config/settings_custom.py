@@ -15,6 +15,7 @@ MIDDLEWARE_CLASSES_CUSTOM = (
 INSTALLED_APPS_CUSTOM = (
     # add your app here...
     'home_application',
+    'organization',
 )
 
 # ===============================================================================

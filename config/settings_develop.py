@@ -5,7 +5,7 @@
 '''
 
 try:
-    from  local_settings import LOCAL_APP_CODE, LOCAL_SECRET_KEY, LOCAL_DATABASE
+    from local_settings import LOCAL_APP_CODE, LOCAL_SECRET_KEY, LOCAL_DATABASE
 except ImportError:
     LOCAL_APP_CODE = ''
     LOCAL_SECRET_KEY = ''
