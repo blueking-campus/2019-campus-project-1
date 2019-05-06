@@ -94,6 +94,14 @@ class Award(models.Model):
     def __unicode__(self):
         return 'id: %d name: %s' % (self.id, self.name)
 
+    @staticmethod
+    def to_array(award_list):
+        return [{
+            'name': award.name,
+            'organization': award.organization,
+            'count': Form.objects.filter(award=award).count()
+        } for award in award_list]
+
 
 class Form(models.Model):
     form_id = models.AutoField(verbose_name=u'申请表id', primary_key=True)

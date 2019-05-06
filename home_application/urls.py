@@ -11,4 +11,5 @@ urlpatterns = patterns(
     # (r'^contact/$', 'contact'),
     url(r'^award/', include('award.urls')),
     url(r'^organization/', include('organization.urls')),
+    url(r'^form/', include('form.urls')),
 )
