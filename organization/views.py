@@ -6,9 +6,8 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
-
 from common.mymako import render_mako_context
-from home_application.models import Organization
+from home_application.models import Organization, UserInfo
 from home_application.response import APIResult, APIServerError
 from organization.utils import verified_organization
 
@@ -53,10 +52,11 @@ def new_organization(request):
     except Exception as e:
         return HttpResponse(status=422, content=u'%s' % e.message)
     try:
+        updater = UserInfo.objects.get(auth_token=request.user)
         Organization.objects.create(name=result['name'],
                                     principal=result['principal'],
                                     users=result['users'],
-                                    updater=request.user)
+                                    updater=updater)
     except Exception as e:
         return APIServerError(e.message)
     return render(request, 'organization/organization.html')
@@ -100,7 +100,7 @@ def get_organization(request):
             'name': organization.name,
             'principal': organization.principal,
             'users': organization.users,
-            'updater': organization.updater,
+            'updater': organization.updater.qq,
             'updated_time': organization.updated_time
         }
     except Exception as e:
