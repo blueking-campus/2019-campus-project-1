@@ -139,7 +139,7 @@
                     <div class="form-group has-feedback clearfix ">
                         <label class="control-label col-sm-3 pt0">评奖条件：</label>
                         <div class="col-sm-9">
-                            <textarea name="inputRequirement" id="input_requirement"/></textarea>
+                            <textarea name="inputRequirement" id="input_requirement"></textarea>
                         </div>
                     </div>
                     <div class="form-group clearfix plugin3_demo" id="plugin3_demo2">
@@ -154,10 +154,16 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group clearfix ">
-                        <label class="col-sm-3 control-label bk-lh30 pt0" for="input_organization">所属组织：</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control bk-valign-top" id="input_organization" value="">
+                    <div class="form-group clearfix plugin3_demo" id="plugin3_demo2">
+                        <!-- select2 通过javascript start -->
+                        <label class="control-label col-sm-3 pt0" for="input_organization">所属组织：</label>
+                        &nbsp;&nbsp;
+                        <div class="select2-container select2_box" id="s2id_autogen4" style="width:300px;">
+                            <select id="input_organization" style="width: 150px;font-size: 12px">
+                                {% for organization in organizations %}
+                                <option value="{{organization.id}}">{{organization.name}}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                     </div>
                     <div class="form-group clearfix ">
@@ -193,7 +199,7 @@
                         <div class="col-sm-9">
                             <div class="radio pt0">
                                 <label class="mr10">
-                                    <input type="radio" name="status" class="bk-top5" value=True>
+                                    <input type="radio" name="status" class="bk-top5" value=True checked>
                                     <span class="bk-lh30">生效</span>
                                 </label>
                                 <label class="mr10">
@@ -219,7 +225,8 @@
     window.onload = function () {
         CKEDITOR.replace('input_requirement');
         $('#my_check').bootstrapSwitch();
-        $("#input_level").select2()
+        $("#input_level").select2();
+        $('#input_organization').select2();
     };
     $('#plugin9_demo1,#plugin9_demo2').datetimepicker({
         language: 'zh-TW',
@@ -235,7 +242,7 @@
         name = document.getElementById('input_award_name').value;
         requirement = CKEDITOR.instances.input_requirement.getData();
         level = $('#input_level').select2("val");
-        organization = document.getElementById('input_organization').value;
+        organization = $('#input_organization').select2("val");
         submit_start_time = document.getElementById('input_start_time').value;
         submit_end_time = document.getElementById('input_end_time').value;
         has_extra_info = $('#myCheck').bootstrapSwitch('state');

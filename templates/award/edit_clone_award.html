@@ -134,8 +134,7 @@
                     <div class="form-group clearfix ">
                         <label class="col-sm-3 control-label bk-lh30 pt0" for="input_award_name">奖项名称：</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control bk-valign-top" id="input_award_name"
-                                   value="{{ award.name }}"></div>
+                            <input type="text" class="form-control bk-valign-top" id="input_award_name"></div>
                     </div>
                     <div class="form-group has-feedback clearfix ">
                         <label class="control-label col-sm-3 pt0">评奖条件：</label>
@@ -236,7 +235,8 @@
     window.onload = function () {
         CKEDITOR.replace('input_requirement');
         $('#my_check').bootstrapSwitch();
-        $("#input_level").select2()
+        $("#input_level").select2();
+        document.getElementById("input_award_name").value = JSON.parse(sessionStorage.getItem(document.getElementById('get_id').innerHTML))['name']
     };
     $('#plugin9_demo1,#plugin9_demo2').datetimepicker({
         language: 'zh-TW',
@@ -269,35 +269,8 @@
             'has_extra_info': has_extra_info,
             'status': status
         };
-        $.ajax({
-            url: "../../api/update_award/",
-            type: "POST",
-            headers: {"X-CSRFToken": $.cookie('csrftoken')},  // 从Cookie取csrf_token，并设置ajax请求头
-            data: JSON.stringify(data),
-            success: function (data) {
-                var d = dialog({
-                    width: 260,
-                    title: '提示',
-                    quickClose: true,
-                    content: '<div class="king-notice-box king-notice-success"><p class="king-notice-text">' + data['data']['message'] + '</p></div>',
-                    ok: function () {
-                        console.log(this)
-                        // do something
-                    },
-                    cancelValue: '取消',
-                    cancel: function () {
-                        console.log(this)
-                        // do something
-                    },
-                    onshow: function () {
-                        console.log(this)
-                        // do something
-                    }
-                });
-                d.show();
-                window.location.href = '/award'
-            }
-        });
+        sessionStorage.setItem(id, JSON.stringify(data));
+        window.history.back(-1);
     });
 
 </script>
