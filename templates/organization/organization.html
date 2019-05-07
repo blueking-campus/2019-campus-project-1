@@ -59,10 +59,9 @@
                 </div>
                 <div class="collapse navbar-collapse navbar-responsive-collapse" id="bk-example-navbar-collapse-3">
                     <ul class="nav navbar-nav ">
-                        <!--<li :class="{'bk-cur':item.active}"  v-for="item in renderData.items">-->
-                        <li class="bk-cur"><a href="javascript:void(0);">奖项申报<span></span></a></li>
-                        <li><a href="javascript:void(0);">系统管理<span></span></a></li>
-                        <li><a href="javascript:void(0);">个人中心<span></span></a></li>
+                        <li><a href="/">奖项申报<span></span></a></li>
+                        <li class="bk-cur"><a href="/award/">系统管理<span></span></a></li>
+                        <li><a href="/form/">个人中心<span></span></a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li>
@@ -84,16 +83,14 @@
             <nav style="overflow:hidden;">
                 <div class="king-vertical-nav9 f14">
                     <div class="navbar-collapse navbar-hov">
-                        <ul class="nav navbar-nav side-nav">
-                            <li class="active">
-                                <a href="javascript:void(0);"> <i class="fa fa-wrench "></i>
-                                    <span>组织管理</span> <i class="fa fa-fw "></i> </a>
-                                <ul id="demo" class="collapse"></ul>
-                            </li>
+                        <ul class="nav navbar-nav side-nav" style="padding-bottom: 0">
                             <li>
-                                <a href="javascript:void(0);"> <i class="fa fa-wrench "></i>
+                                <a href="/organization/"> <i class="fa fa-dashboard "> </i>
+                                    <span>组织管理</span> <i class="fa fa-fw "></i> </a>
+                            </li>
+                            <li class="active">
+                                <a href="/award/"> <i class="fa fa-wrench "> </i>
                                     <span>奖项信息</span> <i class="fa fa-fw "></i> </a>
-                                <ul id="demo" class="collapse"></ul>
                             </li>
                         </ul>
                     </div>
@@ -196,7 +193,7 @@
                             <td>{{ organization.updated_time }}</td>
                             <td>
                                 <a href="api/get_organization/?id={{ organization.id }}" id="detailBtn">查看</a>
-                                <a href="#" onclick="Delete({{ organization.id }})" id="deleteBtn">删除</a>
+                                <a href="#" onclick="delete_organization({{ organization.id }})" id="deleteBtn">删除</a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -256,7 +253,7 @@
         })
     })
 
-    function Delete(id) {
+    function delete_organization(id) {
         data = {
             'id': id
         }
@@ -271,6 +268,8 @@
             }
         })
     }
+
+
 </script>
 
 </body>
