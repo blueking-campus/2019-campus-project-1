@@ -48,7 +48,7 @@ class Permission(models.Model):
 class UserPermission(models.Model):
     id = models.AutoField(verbose_name=u'用户权限code id', primary_key=True)
     qq = models.CharField(max_length=20, default='', verbose_name=u'用户QQ')
-    permission = models.ForeignKey(Permission, verbose_name=u'用户权限')
+    permission = models.ForeignKey(Permission, verbose_name=u'用户权限', on_delete=models.CASCADE)
     objects = models.Manager()
 
     class Meta:
@@ -77,7 +77,7 @@ class Organization(models.Model):
     name = models.CharField(default='', max_length=20, verbose_name=u'组织名称')
     principal = models.CharField(default='', max_length=20, verbose_name=u'负责人')
     users = models.TextField(verbose_name=u'用户')
-    updater = models.ForeignKey(UserInfo, verbose_name=u'更新者')
+    updater = models.ForeignKey(UserInfo, verbose_name=u'更新者', on_delete=models.CASCADE)
     is_delete = models.BooleanField(default=False, verbose_name=u'是否被删除')
     created_time = models.DateTimeField(verbose_name=u'创建时间', auto_now_add=True)
     updated_time = models.DateTimeField(verbose_name=u'更新时间', auto_now=True)
@@ -115,8 +115,8 @@ class Award(models.Model):
     id = models.AutoField(verbose_name=u'奖项id', primary_key=True)
     name = models.CharField(default='', max_length=50, verbose_name=u'奖项名字')
     requirement = models.TextField(default='', verbose_name=u'评奖条件')
-    organization = models.ForeignKey(Organization, verbose_name=u'所属组织')
-    level = models.ForeignKey(Choice, verbose_name=u'项目级别')
+    organization = models.ForeignKey(Organization, verbose_name=u'所属组织', on_delete=models.CASCADE)
+    level = models.ForeignKey(Choice, verbose_name=u'项目级别', on_delete=models.CASCADE)
     # True表示需要上传附件，False表示不需要上传附件
     has_extra_info = models.BooleanField(default=True, verbose_name=u'是否要求上传附件')
     # False表示过期，True表示生效
@@ -147,7 +147,7 @@ class Award(models.Model):
 
 class Form(models.Model):
     form_id = models.AutoField(verbose_name=u'申请表id', primary_key=True)
-    award = models.ForeignKey(Award, verbose_name=u'奖项')
+    award = models.ForeignKey(Award, verbose_name=u'奖项', on_delete=models.CASCADE)
     creator = models.CharField(default='', max_length=200, verbose_name=u'申请者')
     info = models.TextField(default='', verbose_name=u'事迹介绍')
     extra_info = models.FileField(verbose_name=u'附件')
