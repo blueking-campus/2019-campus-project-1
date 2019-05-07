@@ -41,6 +41,9 @@
           rel="stylesheet">
     <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/daterangepicker-2.0.5/moment.min.js"></script>
     <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/daterangepicker-2.0.5/daterangepicker.js"></script>
+    <!--下拉框-->
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/select2-3.5.2/select2.css" rel="stylesheet">
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/select2-3.5.2/select2.js"></script>
     <!--弹层-->
     <script src="https://cdn.bootcss.com/artDialog/7.0.0/dialog-plus.js"></script>
     <style>
@@ -70,9 +73,9 @@
                 <div class="collapse navbar-collapse navbar-responsive-collapse" id="bk-example-navbar-collapse-3">
                     <ul class="nav navbar-nav ">
                         <!--<li :class="{'bk-cur':item.active}"  v-for="item in renderData.items">-->
-                        <li><a href="/">奖项申报<span></span></a></li>
-                        <li class="bk-cur"><a href="/award/">系统管理<span></span></a></li>
-                        <li><a href="/form/">个人中心<span></span></a></li>
+                        <li><a href="javascript:void(0);">奖项申报<span></span></a></li>
+                        <li class="bk-cur"><a href="javascript:void(0);">系统管理<span></span></a></li>
+                        <li><a href="javascript:void(0);">个人中心<span></span></a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li>
@@ -94,13 +97,13 @@
             <nav style="overflow:hidden;">
                 <div class="king-vertical-nav9    f14">
                     <div class="navbar-collapse navbar-hov">
-                        <ul class="nav navbar-nav side-nav" style="padding-bottom: 0">
+                        <ul class="nav navbar-nav side-nav">
                             <li>
-                                <a href="/organization/"> <i class="fa fa-wrench "> </i>
+                                <a href="javascript:void(0);"> <i class="fa fa-dashboard "> </i>
                                     <span>组织管理</span> <i class="fa fa-fw "></i> </a>
                             </li>
                             <li class="active">
-                                <a href="/award/"> <i class="fa fa-dashboard "> </i>
+                                <a href="javascript:void(0);"> <i class="fa fa-wrench "> </i>
                                     <span>奖项信息</span> <i class="fa fa-fw "></i> </a>
                             </li>
                         </ul>
@@ -124,101 +127,41 @@
                 <div class="row" style="height: 100%; margin: 10px 5px 0px;">
                     <form class="form-inline" style="font-size: 10px">
                         <div class="form-group mr10">
-                            <label for="input_award_name">申报奖项：</label>
+                            <label for="input_pre_award_name">申报奖项：</label>
+                            <input type="text" class="form-control" id="input_pre_award_name">
+                            <label for="input_award_name">替换为</label>
                             <input type="text" class="form-control" id="input_award_name">
                         </div>
-                        &nbsp;&nbsp;
+                        <br/><br/>
                         <div class="form-group clearfix plugin3_demo" id="plugin3_demo2">
                             <!-- select2 通过javascript start -->
-                            <label for="input_organization">所属组织：</label>
-
-                            <select id="input_organization" style="width: 150px;height: 34px;font-size: 12px">
-                                {% for organization in organizations %}
-                                    <option value="{{ organization.id }}">{{ organization.name }}</option>
-                                {% endfor %}
-                            </select>
-
+                            <div class="select2-container select2_box" id="s2id_autogen4" style="width:300px;">
+                                <label for="input_organization">所属组织：</label>
+                                <select id="input_organization" multiple="multiple"
+                                        style="width: 150px;font-size: 12px">
+                                    {% for organization in organizations %}
+                                        <option value="{{ organization.id }}">{{ organization.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                         </div>
-                        &nbsp;&nbsp;
-                        <div class="plugin3_demo" id="plugin3_demo1" style="display:inline-block;">
-                            <label>状态: </label>
-                            <select class="select2_box" id="input_status" style="width:100px;height: 34px">
-                                <option value="-1">不限</option>
-                                <option value="1">生效中</option>
-                                <option value="0">已过期</option>
-                            </select>
-                        </div>
+                        <br/><br/>
                         <label for="daterangepicker_demo2">申报时间：</label>
                         <input type="text" class="form-control daterangepicker_demo" id="date_range_picker"
                                placeholder="选择日期..." style="width: 175px">
-                        &nbsp;&nbsp;
                         <br/><br/>
-                        <button type="button" class="king-btn-demo king-btn king-round king-info" id="search">查询
+                        <button type="button" class="king-btn-demo king-btn king-round king-info" id="preview">预览
                         </button>
-                        &nbsp;&nbsp;
-                        <button type="button" class="king-btn-demo king-btn king-round king-info" id="clone">批量克隆
+                        <button type="button" class="king-btn-demo king-btn king-round king-info" id="ready">确定
                         </button>
-                        &nbsp;&nbsp;
-                        <button type="button" class="king-btn-demo king-btn king-round king-info" id="create">新增
-                        </button>
+                        <input type="hidden" id="select_id" name="select_id"/>
                     </form>
                 </div>
                 <div class="container-fluid mb0 " style="padding: 0px">
                     <div class="row">
-                        <div class="col-md-7" style="width:100%!important;">
-                            <table class="table mb0 pr15 ranger-box2  ">
-                                <thead>
-                                <tr>
-                                    <th>所属组织</th>
-                                    <th>奖项级别</th>
-                                    <th>申报奖项</th>
-                                    <th>状态</th>
-                                    <th>开始时间</th>
-                                    <th>申报时间</th>
-                                    <th>申报人数</th>
-                                    <th>获奖人数</th>
-                                    <th>操作</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for award in awards %}
-                                    <tr>
-                                        <td>{{ award.organization.name }}</td>
-                                        <td>{{ award.level.name }}</td>
-                                        <td>{{ award.name }}</td>
-                                        {% if award.status %}
-                                            <td>生效</td>
-                                        {% else %}
-                                            <td>过期</td>
-                                        {% endif %}
-                                        <td>{{ award.submit_start_time }}</td>
-                                        <td>{{ award.submit_end_time }}</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>
-                                            <a href="/award/api/get_award/?award_id={{ award.id }}">查看</a>
-                                            <!--<a href="">克隆</a>-->
-                                            <a href="/award/api/edit_award/?award_id={{ award.id }}">编辑</a>
-                                            <a href="/award/api/delete_award/?award_id={{ award.id }}"
-                                               class="delete">删除</a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-
-
-                                </tbody>
+                        <div class="col-md-7" style="width:80%!important;">
+                            <table class="table mb0 pr15 ranger-box2  " id="table">
                             </table>
-                            {% ifnotequal cur_page 1 %}
-                                <a id="page_up" href="?page={{ cur_page|add:'-1' }}">
-                                    上一页
-                                </a>
-                            {% endifnotequal %}
-                            第{{ cur_page }}/{{ all_page }}页
-                            {% ifnotequal cur_page all_page %}
-                                <a id="page_down" href="?page={{ cur_page|add:'1' }}">
-                                    下一页
-                                </a>
-                            {% endifnotequal %}
                         </div>
 
                     </div>
@@ -230,59 +173,100 @@
 </div>
 <script type="text/javascript">
     window.onload = function () {
-        sessionStorage.clear();
+        $('#input_organization').select2();
+        var a = '<thead><tr><th>所属组织</th><th>奖项级别</th>' +
+            '<th>申报奖项</th><th>替换后奖项名称</th><th>开始时间</th>' +
+            '<th>申报时间</th><th>操作</th></tr></thead><tbody>';
+        for (var i = 0; i < sessionStorage.length; i++) {
+            award = JSON.parse(sessionStorage.getItem(sessionStorage.key(i)));
+            a = a + '<tr><td>' + award['organization'] + '</td><td>' +
+                award['level'] + '</td><td>' +
+                award['pre_name'] + '</td><td>' +
+                award['name'] + '</td><td>' +
+                award['submit_start_time'] + '</td><td>' +
+                award['submit_end_time'] + '</td><td>' +
+                '<a href="/award/api/clone_award/info/?award_id=' + award['id'] + '">查看</a>' +
+                '&nbsp;&nbsp;<a href="/award/api/clone_award/edit_award/award_id=' + award['id'] + '">编辑</a>' +
+                '&nbsp;&nbsp;<a href="javascript:;" onclick="sessionStorage.removeItem(' + award['id'] + '); deleteCurrentRow(this);">删除</a></td></tr>'
+        }
+        a = a + "</tbody>";
+        $('#table').html(a);
     };
     $('#date_range_picker').daterangepicker({
         locale: {
             "format": 'YYYY/MM/DD'
         }
     });
-    $('#create').click(function () {
-        window.location.href = 'create/'
-    });
-    $("#clone").click(function () {
-        window.location.href = 'clone_award/'
-    });
-    $("#search").click(function () {
+
+    function save_data(data) {
+        for (var i = 0, m = data['result'].length; i < m; i++) {
+            sessionStorage.setItem(data['result'][i]['id'], JSON.stringify(data['result'][i]));
+        }
+    }
+
+    function deleteCurrentRow(obj) {
+        var tr = obj.parentNode.parentNode;
+        var tbody = tr.parentNode;
+        tbody.removeChild(tr);
+    }
+
+    $('#preview').click(function () {
+        pre_name = $('#input_pre_award_name').val();
         name = $('#input_award_name').val();
         time = $('#date_range_picker').val();
-        organization_id = $("#input_organization").val();
-        status = $("#input_status").val();
+        organization_ids = $("#input_organization").val();
         data = {
-            "name": name,
-            "time": time,
-            "organization": organization_id,
-            "status": status
+            'pre_name': pre_name,
+            'name': name,
+            'organization_ids': organization_ids,
+            'time': time,
+            'offset': 0,
+            'limit': 5
         };
-
-        var a = document.createElement('a');
-        a.setAttribute('href', "api/search_award/?name=" + name + "&time=" + time + "&organization_id=" + organization_id + "&status=" + status);
-        a.setAttribute('id', 'startTelMedicine');
-        if (document.getElementById('startTelMedicine')) {
-            document.body.removeChild(document.getElementById('startTelMedicine'));
-        }
-        document.body.appendChild(a);
-        a.click();
-    })
-    $('.delete').click(function () {
-        var d = dialog({
-            width: 260,
-            title: '提醒',
-            content: '是否确认删除此条奖项',
-            okValue: "确认",
-            ok: function () {
-
-            },
-            cancelValue: '取消',
-            cancel: function () {
-
+        $.ajax({
+            url: "../api/clone_preview/",
+            type: "POST",
+            headers: {"X-CSRFToken": $.cookie('csrftoken')},  // 从Cookie取csrf_token，并设置ajax请求头
+            data: JSON.stringify(data),
+            success: function (data) {
+                sessionStorage.clear()
+                data = JSON.parse(data);
+                save_data(data);
+                var a = '<thead><tr><th>所属组织</th><th>奖项级别</th>' +
+                    '<th>申报奖项</th><th>替换后奖项名称</th><th>开始时间</th>' +
+                    '<th>申报时间</th><th>操作</th></tr></thead><tbody>';
+                for (var i = 1; i <= data['count']; i++) {
+                    a = a + '<tr><td>' + data['result'][i - 1]['organization'] + '</td><td>' +
+                        data['result'][i - 1]['level'] + '</td><td>' +
+                        data['result'][i - 1]['pre_name'] + '</td><td>' +
+                        data['result'][i - 1]['name'] + '</td><td>' +
+                        data['result'][i - 1]['submit_start_time'] + '</td><td>' +
+                        data['result'][i - 1]['submit_end_time'] + '</td><td>' +
+                        '<a href="/award/api/clone_award/info/?page=' + i + '&award_id=' + data['result'][i - 1]['id'] + '">查看</a>' +
+                        '&nbsp;&nbsp;<a href="/award/api/clone_award/edit_award/award_id=' + data['result'][i - 1]['id'] + '">编辑</a>' +
+                        '&nbsp;&nbsp;<a href="javascript:;" onclick="sessionStorage.removeItem(' + data['result'][i - 1]['id'] + '); deleteCurrentRow(this);">删除</a></td></tr>'
+                }
+                a = a + "</tbody>";
+                $('#table').html(a);
             }
         });
-        d.show();
+    });
+    $("#ready").click(function () {
+        var list = []
+        for (var i = 0; i < sessionStorage.length; i++) {
+            list[i] = JSON.parse(sessionStorage.getItem(sessionStorage.key(i)))
+        }
+        $.ajax({
+            url: "../api/clone_award/save_award/",
+            type: "POST",
+            headers: {"X-CSRFToken": $.cookie('csrftoken')},  // 从Cookie取csrf_token，并设置ajax请求头
+            data: JSON.stringify(list),
+            success: function () {
+
+            }
+        })
+
     })
-
-
 </script>
 </body>
-
 </html>

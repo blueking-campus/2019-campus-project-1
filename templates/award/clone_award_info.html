@@ -71,9 +71,9 @@
                 <div class="collapse navbar-collapse navbar-responsive-collapse" id="bk-example-navbar-collapse-3">
                     <ul class="nav navbar-nav ">
                         <!--<li :class="{'bk-cur':item.active}"  v-for="item in renderData.items">-->
-                        <li><a href="/">奖项申报<span></span></a></li>
-                        <li class="bk-cur"><a href="/award/">系统管理<span></span></a></li>
-                        <li><a href="/form/">个人中心<span></span></a></li>
+                        <li><a href="javascript:void(0);">奖项申报<span></span></a></li>
+                        <li class="bk-cur"><a href="javascript:void(0);">系统管理<span></span></a></li>
+                        <li><a href="javascript:void(0);">个人中心<span></span></a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li>
@@ -95,13 +95,13 @@
             <nav style="overflow:hidden;">
                 <div class="king-vertical-nav9    f14">
                     <div class="navbar-collapse navbar-hov">
-                        <ul class="nav navbar-nav side-nav" style="padding-bottom: 0">
+                        <ul class="nav navbar-nav side-nav">
                             <li>
-                                <a href="/organization/"> <i class="fa fa-dashboard "> </i>
+                                <a href="javascript:void(0);"> <i class="fa fa-dashboard "> </i>
                                     <span>组织管理</span> <i class="fa fa-fw "></i> </a>
                             </li>
                             <li class="active">
-                                <a href="/award/"> <i class="fa fa-wrench "> </i>
+                                <a href="javascript:void(0);"> <i class="fa fa-wrench "> </i>
                                     <span>奖项信息</span> <i class="fa fa-fw "></i> </a>
                             </li>
                         </ul>
@@ -125,9 +125,10 @@
             <div class="king-content-wrap">
                 <div class="king-layout1-content" style="margin-left: 216px;">
                     <div class="panel king-panel1 mb0  ">
+                        <div hidden="hidden" id="get_id">{{ award.id }}</div>
                         <div class="name">
                             <label class="control-label col-sm-3 pt0" for="name">奖项名称</label>
-                            <div id="name">{{ award.name }}</div>
+                            <div id="name"></div>
                         </div>
                         <br/>
                         <div>
@@ -143,9 +144,9 @@
                         <div>
                             <label class="control-label col-sm-3 pt0" for="name">状态</label>
                             {% if award.status %}
-                                <div>生效</div>
+                            <div>生效</div>
                             {% else %}
-                                <div>过期</div>
+                            <div>过期</div>
                             {% endif %}
 
                         </div>
@@ -191,32 +192,32 @@
                             </thead>
                             <tbody>
                             {% for form in forms %}
-                                <tr>
-                                    <td>{{ form.creator }}</td>
-                                    <td>{{ form.get_status_display }}</td>
-                                    <td>{{ form.created_time }}</td>
-                                    <td>{{ form.info }}</td>
-                                    <td>{{ form.extra_info }}</td>
-                                    <td>{{ form.comment }}</td>
-                                    <td>
-                                        <a href="">查看</a>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td>{{form.creator}}</td>
+                                <td>{{form.get_status_display}}</td>
+                                <td>{{form.created_time}}</td>
+                                <td>{{form.info}}</td>
+                                <td>{{form.extra_info}}</td>
+                                <td>{{form.comment}}</td>
+                                <td>
+                                    <a href="">查看</a>
+                                </td>
+                            </tr>
                             {% endfor %}
 
 
                             </tbody>
                         </table>
                         {% ifnotequal cur_page 1 %}
-                            <a id="page_up" href="?page={{ cur_page|add:'-1' }}">
-                                上一页
-                            </a>
+                        <a id="page_up" href="?page={{cur_page|add:'-1'}}">
+                            上一页
+                        </a>
                         {% endifnotequal %}
-                        第{{ cur_page }}/{{ all_page }}页
-                        {% ifnotequal cur_page all_page %}
-                            <a id="page_down" href="?page={{ cur_page|add:'1' }}">
-                                下一页
-                            </a>
+                        第{{ cur_page }}/{{ allPage }}页
+                        {% ifnotequal cur_page allPage %}
+                        <a id="page_down" href="?page={{cur_page|add:'1'}}">
+                            下一页
+                        </a>
                         {% endifnotequal %}
                     </div>
 
@@ -226,9 +227,8 @@
     </div>
 </div>
 <script type="text/javascript">
-    window.onload = function () {
-        sessionStorage.clear();
-    };
+    var id = document.getElementById('get_id').innerHTML;
+    $("#name").append(JSON.parse(sessionStorage.getItem(id))['name'])
 </script>
 </body>
 

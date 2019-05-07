@@ -127,7 +127,7 @@
         </div>
         <!-- sidebar end -->
         <!-- content start -->
-        <div hidden="hidden" id="get_id">{{award.id}}</div>
+        <div hidden="hidden" id="get_id">{{ award.id }}</div>
         <div class="king-content-wrap" style="width: 1000px">
             <div class="king-layout1-content" style="margin-left: 216px;">
                 <form class="form-horizontal">
@@ -140,7 +140,7 @@
                     <div class="form-group has-feedback clearfix ">
                         <label class="control-label col-sm-3 pt0">评奖条件：</label>
                         <div class="col-sm-9">
-                            <textarea name="inputRequirement" id="input_requirement"/>{{ award.requirement }}</textarea>
+                            <textarea name="inputRequirement" id="input_requirement">{{ award.requirement }}</textarea>
                         </div>
                     </div>
                     <div class="form-group clearfix plugin3_demo" id="plugin3_demo2">
@@ -150,11 +150,11 @@
                         <div class="select2-container select2_box" id="s2id_autogen3" style="width:300px;">
                             <select id="input_level" style="width: 100px;font-size: 12px">
                                 {% for level in levels %}
-                                {% ifequal award.level.id level.id%}
-                                <option value="{{level.id}}" selected>{{level.name}}</option>
-                                {% else %}
-                                <option value="{{level.id}}">{{level.name}}</option>
-                                {% endifequal %}
+                                    {% ifequal award.level.id level.id %}
+                                        <option value="{{ level.id }}" selected>{{ level.name }}</option>
+                                    {% else %}
+                                        <option value="{{ level.id }}">{{ level.name }}</option>
+                                    {% endifequal %}
                                 {% endfor %}
                             </select>
                         </div>
@@ -163,7 +163,7 @@
                         <label class="col-sm-3 control-label bk-lh30 pt0" for="input_organization">所属组织：</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control bk-valign-top" id="input_organization"
-                                   value="{{ award.organization }}"></div>
+                                   value="{{ award.organization.name }}"></div>
                     </div>
                     <div class="form-group clearfix ">
                         <label class="col-sm-3 control-label bk-lh30 pt0">开始日期：</label>
@@ -201,20 +201,20 @@
                             <div class="radio pt0">
                                 <label class="mr10">
                                     {% if award.status %}
-                                    <input type="radio" name="status" class="bk-top5" value=True checked>
-                                    <span class="bk-lh30">生效</span>
+                                        <input type="radio" name="status" class="bk-top5" value=True checked>
+                                        <span class="bk-lh30">生效</span>
                                     {% else %}
-                                    <input type="radio" name="status" class="bk-top5" value=True>
-                                    <span class="bk-lh30">生效</span>
+                                        <input type="radio" name="status" class="bk-top5" value=True>
+                                        <span class="bk-lh30">生效</span>
                                     {% endif %}
                                 </label>
                                 <label class="mr10">
                                     {% if award.status %}
-                                    <input type="radio" name="status" class="bk-top5" value=False>
-                                    <span class="bk-lh30">过期</span>
+                                        <input type="radio" name="status" class="bk-top5" value=False>
+                                        <span class="bk-lh30">过期</span>
                                     {% else %}
-                                    <input type="radio" name="status" class="bk-top5" value=False checked>
-                                    <span class="bk-lh30">过期</span>
+                                        <input type="radio" name="status" class="bk-top5" value=False checked>
+                                        <span class="bk-lh30">过期</span>
                                     {% endif %}
                                 </label>
                             </div>
@@ -237,6 +237,9 @@
         CKEDITOR.replace('input_requirement');
         $('#my_check').bootstrapSwitch();
         $("#input_level").select2()
+        window.onload = function () {
+            sessionStorage.clear();
+        };
     };
     $('#plugin9_demo1,#plugin9_demo2').datetimepicker({
         language: 'zh-TW',
@@ -258,7 +261,6 @@
         submit_end_time = document.getElementById('input_end_time').value;
         has_extra_info = $('#myCheck').bootstrapSwitch('state');
         status = $('input[name=status]:checked').val();
-        console.log(level)
         data = {
             'id': id,
             'name': name,
@@ -280,7 +282,7 @@
                     width: 260,
                     title: '提示',
                     quickClose: true,
-                    content: '<div class="king-notice-box king-notice-success"><p class="king-notice-text">'+data['data']['message']+'</p></div>',
+                    content: '<div class="king-notice-box king-notice-success"><p class="king-notice-text">' + data['data']['message'] + '</p></div>',
                     ok: function () {
                         console.log(this)
                         // do something
