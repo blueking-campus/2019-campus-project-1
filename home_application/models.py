@@ -98,13 +98,13 @@ class Award(models.Model):
 
     @staticmethod
     def to_array(award_list):
-        award_ids = [award.id for award in award_list]
-        count = Form.objects.filter(award_id__in=award_ids).values("award_id").annotate(Count('id')).count()
+        # award_ids = [award.id for award in award_list]
+        # count = Form.objects.filter(award_id__in=award_ids).values("award").annotate(Count('award'))
         return [{
             'id': award.id,
             'name': award.name,
             'organization': award.organization,
-            'count': count
+            'count': Form.objects.filter(award=award).count()
         } for award in award_list]
 
 

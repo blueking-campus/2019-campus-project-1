@@ -51,9 +51,9 @@ class UploadFileForm(forms.Form):
     file = forms.FileField()
 
 
-def handle_uploaded_file(f):
+def handle_uploaded_file(uploaded_file):
     with open('static/file/name.txt', 'wb+') as destination:
-        for chunk in f.chunks():
+        for chunk in uploaded_file.chunks():
             destination.write(chunk)
 
 
@@ -88,20 +88,17 @@ def create_form(request, award_id):
 
 def get_form(request, award_id):
     award = Award.objects.get(id=award_id)
-    organization = Organization.objects.get(name=award.organization)
+    organization = Organization.objects.filter(name=award.organization)[0]
     principal = organization.principal
-    try:
-        form_id = request.GET.get('id')
-        form = Form.objects.get(form_id=form_id)
-        data = {
-            'award': award,
-            'principal': principal,
-            'id': form.form_id,
-            'creator': form.creator,
-            'extra_info': form.extra_info,
-            'status': form.status,
-            'comment': form.comment
-        }
-    except Exception as e:
-        return APIServerError(e.message)
+    form_id = request.GET.get('id')
+    form = Form.objects.get(form_id=form_id)
+    data = {
+        'award': award,
+        'principal': principal,
+        'id': form.form_id,
+        'creator': form.creator,
+        'extra_info': form.extra_info,
+        'status': form.status,
+        'comment': form.comment
+    }
     return render(request, 'form/form_info.html', data)
