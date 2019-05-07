@@ -13,7 +13,7 @@ from organization.utils import verified_organization
 
 
 @csrf_protect
-def get_organizations(request):
+def get_organization_list(request):
     organizations = Organization.objects.all()
     data = {}
     if request.method == "GET":
@@ -23,11 +23,11 @@ def get_organizations(request):
         try:
             organization_list = paginator.page(current_page)
             if organization_list.has_next():
-                next_page = current_page+1
+                next_page = current_page + 1
             else:
                 next_page = current_page
             if organization_list.has_previous():
-                previous_page = current_page-1
+                previous_page = current_page - 1
             else:
                 previous_page = current_page
             data = {
@@ -57,8 +57,8 @@ def new_organization(request):
                                     principal=result['principal'],
                                     users=result['users'],
                                     updater=updater)
-    except Exception as e:
-        return APIServerError(e.message)
+    except:
+        return APIServerError(u"创建失败！")
     return render(request, 'organization/organization.html')
 
 

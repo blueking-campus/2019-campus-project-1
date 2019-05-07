@@ -11,7 +11,7 @@ from home_application.models import Award, Form
 def home(request):
     awards_list = Award.objects.filter(status=True).order_by('-id')[:3]
     awards = Award.to_array(awards_list)
-    prize_winner = Form.objects.filter(status=4).order_by('-id')
+    prize_winner = Form.objects.filter(status=4).order_by('-form_id')
     return render(request, 'home_application/home.html', {'results': awards,
                                                           'winners': prize_winner})
 

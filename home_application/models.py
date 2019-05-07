@@ -5,6 +5,8 @@
 
 # import from lib
 from django.db import models
+from django.db.models.sql.aggregates import Count
+
 from account.models import BkUser
 
 STATUS_CHOICES = (
@@ -96,10 +98,13 @@ class Award(models.Model):
 
     @staticmethod
     def to_array(award_list):
+        award_ids = [award.id for award in award_list]
+        count = Form.objects.filter(award_id__in=award_ids).values("award_id").annotate(Count('id')).count()
         return [{
+            'id': award.id,
             'name': award.name,
             'organization': award.organization,
-            'count': Form.objects.filter(award=award).count()
+            'count': count
         } for award in award_list]
 
 

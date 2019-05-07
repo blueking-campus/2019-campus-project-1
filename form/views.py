@@ -1,25 +1,26 @@
 # -*- coding: utf-8 -*-
 import json
+import os
 
+from django import forms
 from django.core.paginator import Paginator, InvalidPage
 from django.http import HttpResponse
 from django.shortcuts import render
-
-# Create your views here.
 from django.views.decorators.csrf import csrf_protect
-
 from home_application.models import Form, UserInfo, Award, Organization
+from home_application.response import APIResult
 from response import APIServerError
 
 
+# 获取当前登录用户所申报的所有内容
 @csrf_protect
 def get_forms(request):
-    user = UserInfo.objects.get(auth_token=request.user)
-    forms = Form.objects.filter(creator=user.qq)
+    user = UserInfo.objects.filter(auth_token=request.user)[0]
+    all_form = Form.objects.filter(updater=user.qq).all()
     data = {}
-    if request.method == "Get":
+    if request.method == "GET":
         current_page = int(request.GET.get('page', 1))
-        paginator = Paginator(forms, 5)
+        paginator = Paginator(all_form, 5)
         page_num = paginator.num_pages
         try:
             form_list = paginator.page(current_page)
@@ -39,26 +40,48 @@ def get_forms(request):
                 'previous_page': previous_page,
                 'results': form_list
             }
-            print page_num
         except InvalidPage:
             # 如果请求的页数不存在，重定向页面
             return HttpResponse('找不到页面的内容！')
     return render(request, 'form/form.html', data)
 
 
-def create_form(request):
-    award_id = int(request.GET.get('id'))
+class UploadFileForm(forms.Form):
+    title = forms.CharField(max_length=50)
+    file = forms.FileField()
+
+
+def handle_uploaded_file(f):
+    with open('static/file/name.txt', 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
+
+# 新建申报
+def create_form(request, award_id):
     award = Award.objects.get(id=award_id)
-    try:
-        result = json.loads(request.body)
+    organization = Organization.objects.get(name=award.organization)
+    principal = organization.principal
+    if request.method == "POST":
+        # 文件上传还未实现
+        # extra_info = UploadFileForm(request.POST, request.FILES)
+        # if extra_info.is_valid():
+            # handle_uploaded_file(extra_info)
+        result = {}
+        try:
+            result = json.loads(request.body)
+        except Exception as e:
+            return HttpResponse(status=422, content=u'%s' % e.message)
         Organization.objects.filter(name=result['organization_name'])
-    except Exception as e:
-        return HttpResponse(status=422, content=u'%s' % e.message)
-    try:
-        updater = UserInfo.objects.get(auth_token=request.user)
-        Form.objects.create(creator=result['organization_name'],
-                            info=result['info'],
-                            updater=updater.qq)
-    except Exception as e:
-        return APIServerError(e.message)
-    return render(request, 'form/create_form.html', {'award': award})
+        try:
+            updater = UserInfo.objects.get(auth_token=request.user)
+            Form.objects.create(creator=result['organization_name'],
+                                info=result['info'],
+                                award=award,
+                                updater=updater.qq,
+                                # extra_info=request.FILES['extra_info'],
+                                status=0)
+        except:
+            return APIServerError(u"创建失败！")
+    return render(request, 'form/create_form.html', {'award': award,
+                                                     'principal': principal})
