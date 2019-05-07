@@ -52,10 +52,9 @@
                 </div>
                 <div class="collapse navbar-collapse navbar-responsive-collapse" id="bk-example-navbar-collapse-3">
                     <ul class="nav navbar-nav ">
-                        <!--<li :class="{'bk-cur':item.active}"  v-for="item in renderData.items">-->
-                        <li class="bk-cur"> <a href="javascript:void(0);">奖项申报<span></span></a> </li>
-                        <li> <a href="javascript:void(0);">系统管理<span></span></a> </li>
-                        <li> <a href="javascript:void(0);">个人中心<span></span></a> </li>
+                        <li><a href="/">奖项申报<span></span></a></li>
+                        <li class="bk-cur"><a href="/award/">系统管理<span></span></a></li>
+                        <li><a href="/form/">个人中心<span></span></a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li>
@@ -75,16 +74,14 @@
             <nav style="overflow:hidden;">
                 <div class="king-vertical-nav9 f14">
                     <div class="navbar-collapse navbar-hov">
-                        <ul class="nav navbar-nav side-nav">
-                            <li class="active">
-                                <a href="javascript:void(0);"> <i class="fa fa-dashboard "></i>
-                                    <span>组织管理</span> <i class="fa fa-fw "></i> </a>
-                                <ul id="demo" class="collapse"> </ul>
-                            </li>
+                        <ul class="nav navbar-nav side-nav" style="padding-bottom: 0">
                             <li>
-                                <a href="javascript:void(0);"> <i class="fa fa-wrench "></i>
+                                <a href="/organization/"> <i class="fa fa-dashboard "> </i>
+                                    <span>组织管理</span> <i class="fa fa-fw "></i> </a>
+                            </li>
+                            <li class="active">
+                                <a href="/award/"> <i class="fa fa-wrench "> </i>
                                     <span>奖项信息</span> <i class="fa fa-fw "></i> </a>
-                                <ul id="demo" class="collapse"> </ul>
                             </li>
                         </ul>
                     </div>
@@ -107,9 +104,9 @@
                 <!-- 面板 编辑 结束 -->
                 </div>
         </div>
-        <div class="king-content-wrap">
+        <div class="king-content-wrap" >
             <div class="king-layout1-content" style="margin-left: 216px;">
-                <div class="panel king-panel1 mb0  ">
+                <div class="panel king-panel1 mb0  " style="border: none;">
                     <div class="form-group clearfix ">
                         <label class="col-sm-2 control-label bk-lh30 pt0">所属组织：</label>
                         <div class="col-sm-9">
@@ -151,18 +148,18 @@
     </div>
 </div>
 <script>
-    $("#saveBtn").hide()
+    $("#saveBtn").hide();
     var str=location.href;
-    var num=str.indexOf("?")
+    var num=str.indexOf("?");
     str=str.substr(num+1); //取得所有参数   stringvar.substr(start [, length ]
     var arr=str.split("&");
     var organization_id = (arr[0].split("="))[1];
     $("#modifyBtn").click(function () {
-        $("#saveBtn").show()
+        $("#saveBtn").show();
         $("#name").attr("disabled",false);
         $("#principal").attr("disabled",false);
         $("#users").attr("disabled",false);
-    })
+    });
     $("#saveBtn").click(function () {
             let name = $("#name").val();
             let principal = $("#principal").val();
@@ -173,7 +170,7 @@
                 principal:principal,
                 users:users,
                 updated_time:new Date()
-            }
+            };
             $.ajax({
                 type: "POST",
                 url: "../update_organization/",

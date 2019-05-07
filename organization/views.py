@@ -6,15 +6,14 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
-
 from common.mymako import render_mako_context
-from home_application.models import Organization
+from home_application.models import Organization, UserInfo
 from home_application.response import APIResult, APIServerError
 from organization.utils import verified_organization
 
 
 @csrf_protect
-def get_organizations(request):
+def get_organization_list(request):
     organizations = Organization.objects.all()
     data = {}
     if request.method == "GET":
@@ -24,11 +23,11 @@ def get_organizations(request):
         try:
             organization_list = paginator.page(current_page)
             if organization_list.has_next():
-                next_page = current_page+1
+                next_page = current_page + 1
             else:
                 next_page = current_page
             if organization_list.has_previous():
-                previous_page = current_page-1
+                previous_page = current_page - 1
             else:
                 previous_page = current_page
             data = {
@@ -53,12 +52,13 @@ def new_organization(request):
     except Exception as e:
         return HttpResponse(status=422, content=u'%s' % e.message)
     try:
+        updater = UserInfo.objects.get(auth_token=request.user)
         Organization.objects.create(name=result['name'],
                                     principal=result['principal'],
                                     users=result['users'],
-                                    updater=request.user)
-    except Exception as e:
-        return APIServerError(e.message)
+                                    updater=updater)
+    except:
+        return APIServerError(u"创建失败！")
     return render(request, 'organization/organization.html')
 
 
@@ -100,7 +100,7 @@ def get_organization(request):
             'name': organization.name,
             'principal': organization.principal,
             'users': organization.users,
-            'updater': organization.updater,
+            'updater': organization.updater.qq,
             'updated_time': organization.updated_time
         }
     except Exception as e:

@@ -1,14 +1,127 @@
-<%inherit file="/base.html"/>
+<!DOCTYPE html>
+<html>
 
-<%block name='head'>
-	<title>蓝鲸开发框架</title>
-	${parent.head()}
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <!-- 若您需要使用Kendo UI Professional，请联系版权人获得合法的授权或许可。 -->
+    <!-- Bootstrap css -->
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/bootstrap-3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <!-- kendo ui css -->
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/kendoui-2015.2.624/styles/kendo.common.min.css" rel="stylesheet">
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/kendoui-2015.2.624/styles/kendo.default.min.css" rel="stylesheet">
+    <!-- font-awesome -->
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/fontawesome/css/font-awesome.css" rel="stylesheet">
+    <!--蓝鲸提供的公用样式库 -->
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/bk/css/bk.css" rel="stylesheet">
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/bk/css/bk_pack.css" rel="stylesheet">
+    <!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/js/jquery-1.10.2.min.js"></script>
+    <!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/echarts-2.0/echarts-all.js"></script>
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <!-- 包括所有kendoui的js插件或者可以根据需要使用的js插件调用　-->
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/kendoui-2015.2.624/js/kendo.all.min.js"></script>
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/echarts-2.0/echarts-all.js"></script>
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/bk/js/bk.js"></script>
+    <!-- 数据埋点统计 -->
+    <script src="http://magicbox.bk.tencent.com/static_api/analysis.js"></script>
+    <!-- 以下两个插件用于在IE8以及以下版本浏览器支持HTML5元素和媒体查询，如果不需要用可以移除 -->
+    <!--[if lt IE 9]><script src="https://magicbox.bk.tencent.com/static_api/v3/assets/js/html5shiv.min.js"></script><script src="https://magicbox.bk.tencent.com/static_api/v3/assets/js/respond.min.js"></script><![endif]-->
+</head>
 
-</%block>
+<body class="bg-white" data-bg-color="bg-white">
+    <div class="king-layout1-header">
+        <nav role="navigation" class="navbar navbar-default king-horizontal-nav3     f14">
+            <div class="nav-container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                            data-target="#bk-example-navbar-collapse-3">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="javascript:;">
+                        <img src="https://magicbox.bk.tencent.com/static_api/v3/bk/images/logo.png" alt="" class="logo">
+                    </a>
+                </div>
+                <div class="collapse navbar-collapse navbar-responsive-collapse" id="bk-example-navbar-collapse-3">
+                    <ul class="nav navbar-nav ">
+                        <!--<li :class="{'bk-cur':item.active}"  v-for="item in renderData.items">-->
+                        <li class="bk-cur"><a href="/">奖项申报<span></span></a></li>
+                        <li><a href="/award/">系统管理<span></span></a></li>
+                        <li><a href="/form/">个人中心<span></span></a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="javascript:;">
+                                <img src="http://q1.qlogo.cn/g?b=qq&amp;nk=1181849919&amp;s=100&amp;t=1556272002"
+                                     onerror="javascript:this.src='/static/images/getheadimg.jpg';" width="30"
+                                     alt="Avatar" style="border-radius:50%;margin-right:10px;">
+                                <span>管理者 ( admin )</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="king-layout2-main mt15" style="width:960px;">
+        <div class="page-header">
+            <h4>当前可申报的奖项</h4>
+        </div>
+        <div class="row">
+            {% for award in results %}
+            <div class="col-sm-4">
+                <div class="thumbnail" style="text-align:center" onclick="jump({{ award.id }})">
+                    <img src="static/images/certificate.png" width="100" height="100">
+                    <div class="caption">
+                        <h5>{{ award.organization }}</h5>
+                        <p>{{ award.name }}</p>
+                        <p>提报人数{{ award.count }}人</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="page-header">
+            <h4>上次获奖人名单</h4>
+        </div>
+        <table class="table mb0 pr15 ranger-box2  ">
+            <thead>
+            <tr>
+                <th style="width: 20%;">所属单位</th>
+                <th style="width: 20%;">申报奖项</th>
+                <th style="width: 20%;">申请时间</th>
+                <th style="width: 20%;">申报人/团队</th>
+                <th style="width: 20%;">申报详情</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for winner in winners %}
+                <tr>
+                    <td>{{ winner.award.organization }}</td>
+                    <td>{{ winner.award.name }}</td>
+                    <td>{{ winner.created_time }}</td>
+                    <td>{{ winner.creator }}</td>
+                    <td>
+                        <a href="#" id="detailBtn">查看</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
-<%block name="content">
-	<div>
-		<h3>蓝鲸开发框架<small>助力你的自动化</small></h3>
-	</div>
-</%block>
+    <script>
+    function jump(id) {
+        url = "/form/create_form/"+id+"/";
+        window.location.href = url;
+    }
+    </script>
+</body>
 
+</html>
