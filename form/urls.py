@@ -7,6 +7,6 @@ from form import views
 
 urlpatterns = patterns(
     'form.views',
-    (r'^$/', 'get_forms'),
+    (r'^$/', 'get_form_list'),
     (r'^create_form/([0-9]{1,})/', 'create_form')
 )

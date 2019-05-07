@@ -14,7 +14,7 @@ from response import APIServerError
 
 # 获取当前登录用户所申报的所有内容
 @csrf_protect
-def get_forms(request):
+def get_form_list(request):
     user = UserInfo.objects.filter(auth_token=request.user)[0]
     all_form = Form.objects.filter(updater=user.qq).all()
     data = {}
@@ -72,10 +72,9 @@ def create_form(request, award_id):
             result = json.loads(request.body)
         except Exception as e:
             return HttpResponse(status=422, content=u'%s' % e.message)
-        Organization.objects.filter(name=result['organization_name'])
         try:
             updater = UserInfo.objects.get(auth_token=request.user)
-            Form.objects.create(creator=result['organization_name'],
+            Form.objects.create(creator=result['applicant'],
                                 info=result['info'],
                                 award=award,
                                 updater=updater.qq,
@@ -85,3 +84,24 @@ def create_form(request, award_id):
             return APIServerError(u"创建失败！")
     return render(request, 'form/create_form.html', {'award': award,
                                                      'principal': principal})
+
+
+def get_form(request, award_id):
+    award = Award.objects.get(id=award_id)
+    organization = Organization.objects.get(name=award.organization)
+    principal = organization.principal
+    try:
+        form_id = request.GET.get('id')
+        form = Form.objects.get(form_id=form_id)
+        data = {
+            'award': award,
+            'principal': principal,
+            'id': form.form_id,
+            'creator': form.creator,
+            'extra_info': form.extra_info,
+            'status': form.status,
+            'comment': form.comment
+        }
+    except Exception as e:
+        return APIServerError(e.message)
+    return render(request, 'form/form_info.html', data)

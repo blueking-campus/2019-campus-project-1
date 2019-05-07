@@ -167,7 +167,7 @@
                         <div class="form-group clearfix ">
                             <label class="col-sm-4 control-label bk-lh30 pt0">申报人/团队</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control bk-valign-top" id="organization_name"
+                                <input type="text" class="form-control bk-valign-top" id="applicant"
                                        placeholder="提示信息">
                             </div>
                         </div>
@@ -201,7 +201,7 @@
     </div>
     <script>
         function save(award_id) {
-            var organization_name = $("#organization_name").val();
+            var organization_name = $("#applicant").val();
             var info = $("#info").val();
             var result = {
                 organization_name: organization_name,
