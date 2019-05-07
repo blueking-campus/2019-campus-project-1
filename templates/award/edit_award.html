@@ -237,6 +237,9 @@
         CKEDITOR.replace('input_requirement');
         $('#my_check').bootstrapSwitch();
         $("#input_level").select2()
+        window.onload = function () {
+            sessionStorage.clear();
+        };
     };
     $('#plugin9_demo1,#plugin9_demo2').datetimepicker({
         language: 'zh-TW',

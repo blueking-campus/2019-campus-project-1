@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 import datetime
+import time
 
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
@@ -308,3 +309,47 @@ def edit_clone_award(request):
         })
     levels = Choice.objects.all()
     return render(request, "award/edit_clone_award.html", {'award': award, 'levels': levels})
+
+
+def save_clone_award(request):
+    if request.method == 'POST':
+        try:
+            req = json.loads(request.body)
+        except:
+            response = {
+                "result": False,
+                "code": 400,
+                "data": {},
+                "message": "保存奖项失败"
+            }
+            return APIServerError(response)
+        for award in req:
+            id = award["id"]
+            name = award["name"]
+            try:
+                requirement = award["requirement"]
+                has_extra_info = award["has_extra_info"]
+                status = bool(award["status"])
+            except KeyError:
+                requirement = Award.objects.get(id=id).requirement
+                has_extra_info = Award.objects.get(id=id).has_extra_info
+                status = Award.objects.get(id=id).status
+            org_id = Organization.objects.get(name=award["organization"]).id
+            level_id = Choice.objects.get(name=award["level"]).id
+            organization = Organization(id=org_id)
+            level = Choice(id=level_id)
+            submit_start_time = datetime.datetime.strptime(award["submit_start_time"], "%Y-%m-%d %H:%M:%S")
+            submit_end_time = datetime.datetime.strptime(award["submit_end_time"], "%Y-%m-%d %H:%M:%S")
+            Award.objects.create(
+                name=name, requirement=requirement, organization=organization
+                , level=level, has_extra_info=has_extra_info, status=status
+                , submit_start_time=submit_start_time, submit_end_time=submit_end_time)
+        response = {
+            "result": True,
+            "code": 0,
+            "data": {},
+            "message": "创建奖项成功"
+        }
+        return APIResult(response)
+    else:
+        pass

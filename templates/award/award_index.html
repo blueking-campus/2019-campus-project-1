@@ -229,6 +229,9 @@
     </div>
 </div>
 <script type="text/javascript">
+    window.onload = function () {
+        sessionStorage.clear();
+    };
     $('#date_range_picker').daterangepicker({
         locale: {
             "format": 'YYYY/MM/DD'

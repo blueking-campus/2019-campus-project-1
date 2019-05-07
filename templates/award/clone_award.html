@@ -152,6 +152,8 @@
                         <br/><br/>
                         <button type="button" class="king-btn-demo king-btn king-round king-info" id="preview">预览
                         </button>
+                        <button type="button" class="king-btn-demo king-btn king-round king-info" id="ready">确定
+                        </button>
                         <input type="hidden" id="select_id" name="select_id"/>
                     </form>
                 </div>
@@ -248,6 +250,22 @@
                 $('#table').html(a);
             }
         });
+    });
+    $("#ready").click(function () {
+        var list = []
+        for (var i = 0; i < sessionStorage.length; i++) {
+            list[i] = JSON.parse(sessionStorage.getItem(sessionStorage.key(i)))
+        }
+        $.ajax({
+            url: "../api/clone_award/save_award/",
+            type: "POST",
+            headers: {"X-CSRFToken": $.cookie('csrftoken')},  // 从Cookie取csrf_token，并设置ajax请求头
+            data: JSON.stringify(list),
+            success: function () {
+
+            }
+        })
+
     })
 </script>
 </body>
