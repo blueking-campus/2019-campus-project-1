@@ -16,6 +16,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(serialize=False, verbose_name='\u5956\u9879id', primary_key=True)),
                 ('name', models.CharField(default=b'', max_length=50, verbose_name='\u5956\u9879\u540d\u5b57')),
                 ('requirement', models.TextField(default=b'', verbose_name='\u8bc4\u5956\u6761\u4ef6')),
+                ('organization', models.CharField(default=b'', max_length=20, verbose_name='\u6240\u5c5e\u7ec4\u7ec7')),
                 ('has_extra_info', models.BooleanField(default=True, verbose_name='\u662f\u5426\u8981\u6c42\u4e0a\u4f20\u9644\u4ef6')),
                 ('status', models.BooleanField(default=True, verbose_name='\u72b6\u6001')),
                 ('is_delete', models.BooleanField(default=False, verbose_name='\u662f\u5426\u88ab\u5220\u9664')),
@@ -119,10 +120,5 @@ class Migration(migrations.Migration):
             model_name='award',
             name='level',
             field=models.ForeignKey(verbose_name='\u9879\u76ee\u7ea7\u522b', to='home_application.Choice'),
-        ),
-        migrations.AddField(
-            model_name='award',
-            name='organization',
-            field=models.ForeignKey(verbose_name='\u6240\u5c5e\u7ec4\u7ec7', to='home_application.Organization'),
         ),
     ]
