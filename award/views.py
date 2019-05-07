@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
 import datetime
-import time
 
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
@@ -13,6 +12,9 @@ from home_application.models import Award, Organization, Form, Choice
 # Create your views here.
 
 def index(request):
+    """
+    返回奖项首页
+    """
     cur_page = int(request.GET.get('page', 1))
     limit = int(request.GET.get('limit', 5))
     all_award_counts = Award.objects.filter(is_delete=False).count()
@@ -28,17 +30,26 @@ def index(request):
 
 
 def create(request):
+    """
+    返回创建奖项页面
+    """
     levels = Choice.objects.all()
     organizations = Organization.objects.all()
     return render(request, 'award/create_award.html', {'levels': levels, 'organizations': organizations})
 
 
 def clone_award(request):
+    """
+    返回克隆奖项页面
+    """
     organizations = Organization.objects.all()
     return render(request, 'award/clone_award.html', {'organizations': organizations})
 
 
 def create_award(request):
+    """
+    创建奖项接口
+    """
     if request.method == 'POST':
         try:
             req = json.loads(request.body)
@@ -75,7 +86,10 @@ def create_award(request):
 
 
 def get_award(request):
-    award_id = int(request.GET.get('award_id', 1))
+    """
+    获取指定奖项信息接口
+    """
+    award_id = int(request.GET.get('award_id'))
     cur_page = int(request.GET.get('page', 1))
     limit = int(request.GET.get('limit', 5))
     try:
@@ -83,7 +97,7 @@ def get_award(request):
     except:
         return APIServerError({
             "result": False,
-            "code": 400,
+            "code": 500,
             "data": {},
             "message": "get award id error"
         })
@@ -101,7 +115,10 @@ def get_award(request):
 
 
 def delete_award(request):
-    award_id = int(request.GET.get('award_id', 1))
+    """
+    软删除指定奖项信息接口
+    """
+    award_id = int(request.GET.get('award_id'))
     try:
         award = Award.objects.get(id=award_id)
     except:
@@ -117,7 +134,10 @@ def delete_award(request):
 
 
 def edit_award(request):
-    award_id = int(request.GET.get('award_id', 1))
+    """
+    返回编辑奖项页面
+    """
+    award_id = int(request.GET.get('award_id'))
     try:
         award = Award.objects.get(id=award_id)
     except:
@@ -132,6 +152,9 @@ def edit_award(request):
 
 
 def update_award(request):
+    """
+    更新指定奖项信息接口
+    """
     if request.method == 'POST':
         try:
             req = json.loads(request.body)
@@ -183,8 +206,12 @@ def update_award(request):
 
 
 def search_award(request):
+    """
+    搜索指定奖项信息接口
+    """
+    UNLIMITED_CODE = -1
     name = request.GET.get("name")
-    organization = int(request.GET.get("organization"))
+    organization_id = int(request.GET.get("organization_id"))
     time = request.GET.get("time")
     status = int(request.GET.get("status"))
     limit = 5
@@ -193,19 +220,19 @@ def search_award(request):
     end_time = time.split(u"&nbsp;-&nbsp;")[1].split(u'/')
     start_time = datetime.datetime(int(start_time[0]), int(start_time[1]), int(start_time[2]))
     end_time = datetime.datetime(int(end_time[0]), int(end_time[1]), int(end_time[2]))
-    if status == -1:
+    if status == UNLIMITED_CODE:
         awards = Award.objects.filter(
             name__contains=name,
             submit_start_time__range=(start_time, end_time),
             submit_end_time__range=(start_time, end_time),
-            organization_id=organization
+            organization_id=organization_id
         )
     else:
         awards = Award.objects.filter(
             name__contains=name,
             submit_start_time__range=(start_time, end_time),
             submit_end_time__range=(start_time, end_time),
-            organization_id=organization,
+            organization_id=organization_id,
             status=status
         )
     count = awards.count()
@@ -221,6 +248,9 @@ def search_award(request):
 
 
 def clone_preview(request):
+    """
+    返回批量克隆预览结果
+    """
     if request.method == "POST":
         try:
             req = json.loads(request.body)
@@ -251,27 +281,30 @@ def clone_preview(request):
         count = awards.count()
         all_pages = count / limit
         awards = awards[offset: offset + limit]
-        dic = {}
-        dic['all_pages'] = all_pages
-        dic['count'] = count
-        dic['result'] = []
-        for i in awards:
-            award = {}
-            award['id'] = i.id
-            award['pre_name'] = i.name
-            award['name'] = i.name.replace(pre_name, name)
-            award['organization'] = i.organization.name
-            award['level'] = i.level.name
-            award['submit_start_time'] = i.submit_start_time.strftime('%Y-%m-%d %H:%M:%S')
-            award['submit_end_time'] = i.submit_end_time.strftime('%Y-%m-%d %H:%M:%S')
-            dic['result'].append(award)
-        return JsonResponse(json.dumps(dic), safe=False)
+        session = {}
+        session['all_pages'] = all_pages
+        session['count'] = count
+        session['result'] = [
+            {
+                "id": award.id,
+                "pre_name": award.name,
+                "name": award.name.replace(pre_name, name),
+                "organization": award.organization.name,
+                "level": award.level.name,
+                "submit_start_time": award.submit_start_time.strftime('%Y-%m-%d %H:%M:%S'),
+                "submit_end_time": award.submit_end_time.strftime('%Y-%m-%d %H:%M:%S')
+            } for award in awards
+        ]
+        return JsonResponse(json.dumps(session), safe=False)
     else:
         pass
 
 
 def clone_award_info(request):
-    award_id = int(request.GET.get('award_id', 1))
+    """
+    返回指定克隆奖项信息页面
+    """
+    award_id = int(request.GET.get('award_id'))
     cur_page = int(request.GET.get('page', 1))
     limit = int(request.GET.get('limit', 5))
     try:
@@ -297,7 +330,10 @@ def clone_award_info(request):
 
 
 def edit_clone_award(request):
-    award_id = int(request.GET.get('award_id', 1))
+    """
+    返回编辑指定克隆奖项信息页面
+    """
+    award_id = int(request.GET.get('award_id'))
     try:
         award = Award.objects.get(id=award_id)
     except:
@@ -312,6 +348,9 @@ def edit_clone_award(request):
 
 
 def save_clone_award(request):
+    """
+    保存批量克隆结果接口
+    """
     if request.method == 'POST':
         try:
             req = json.loads(request.body)

@@ -246,17 +246,17 @@
     $("#search").click(function () {
         name = $('#input_award_name').val();
         time = $('#date_range_picker').val();
-        organization = $("#input_organization").val();
+        organization_id = $("#input_organization").val();
         status = $("#input_status").val();
         data = {
             "name": name,
             "time": time,
-            "organization": organization,
+            "organization": organization_id,
             "status": status
         };
 
         var a = document.createElement('a');
-        a.setAttribute('href', "api/search_award/?name=" + name + "&time=" + time + "&organization=" + organization + "&status=" + status);
+        a.setAttribute('href', "api/search_award/?name=" + name + "&time=" + time + "&organization_id=" + organization_id + "&status=" + status);
         a.setAttribute('id', 'startTelMedicine');
         if (document.getElementById('startTelMedicine')) {
             document.body.removeChild(document.getElementById('startTelMedicine'));
