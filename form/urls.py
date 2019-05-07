@@ -3,7 +3,6 @@ from sys import path
 
 from django.conf.urls import url, patterns
 
-from form import views
 
 urlpatterns = patterns(
     'form.views',
