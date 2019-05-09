@@ -46,39 +46,29 @@ def get_form_list(request):
     return render(request, 'form/form.html', data)
 
 
-class UploadFileForm(forms.Form):
-    title = forms.CharField(max_length=50)
-    file = forms.FileField()
-
-
-def handle_uploaded_file(uploaded_file):
-    with open('static/file/name.txt', 'wb+') as destination:
-        for chunk in uploaded_file.chunks():
-            destination.write(chunk)
-
-
 # 新建申报
 def create_form(request, award_id):
     award = Award.objects.get(id=award_id)
-    organization = Organization.objects.get(name=award.organization)
+    organization = Organization.objects.get(name=award.organization.name)
     principal = organization.principal
     if request.method == "POST":
-        # 文件上传还未实现
-        # extra_info = UploadFileForm(request.POST, request.FILES)
-        # if extra_info.is_valid():
-            # handle_uploaded_file(extra_info)
-        result = {}
+        extra_info = request.FILES.get('appendix')
+        file_name = 'static/file/%s' % extra_info.name
+        with open(file_name, 'wb+') as destination:
+            for chunk in extra_info.chunks():
+                destination.write(chunk)
         try:
-            result = json.loads(request.body)
+            applicant = request.POST.get("applicant")
+            info = request.POST.get("info")
         except Exception as e:
             return HttpResponse(status=422, content=u'%s' % e.message)
         try:
             updater = UserInfo.objects.get(auth_token=request.user)
-            Form.objects.create(creator=result['applicant'],
-                                info=result['info'],
+            Form.objects.create(creator=applicant,
+                                info=info,
                                 award=award,
                                 updater=updater.qq,
-                                # extra_info=request.FILES['extra_info'],
+                                extra_info=extra_info,
                                 status=0)
         except:
             return APIServerError(u"创建失败！")
@@ -88,17 +78,35 @@ def create_form(request, award_id):
 
 def get_form(request, award_id):
     award = Award.objects.get(id=award_id)
-    organization = Organization.objects.filter(name=award.organization)[0]
+    organization = Organization.objects.get(name=award.organization.name)
     principal = organization.principal
     form_id = request.GET.get('id')
     form = Form.objects.get(form_id=form_id)
+    file_name = form.extra_info.name
+    # file_name = file_name.split('/')[1]
     data = {
         'award': award,
         'principal': principal,
-        'id': form.form_id,
-        'creator': form.creator,
-        'extra_info': form.extra_info,
-        'status': form.status,
-        'comment': form.comment
+        'form': form,
+        'file_name': file_name
     }
     return render(request, 'form/form_info.html', data)
+
+
+def update_form(request, form_id):
+    try:
+        applicant = request.POST.get("applicant")
+        info = request.POST.get("info")
+        extra_info = request.FILES.get('appendix')
+        file_name = 'static/file/%s' % extra_info.name
+        with open(file_name, 'wb+') as destination:
+            for chunk in extra_info.chunks():
+                destination.write(chunk)
+    except Exception as e:
+        return HttpResponse(status=422, content=u'%s' % e.message)
+    form = Form.objects.filter(form_id=form_id)
+    if form.exists():
+        form.update(creator=applicant)
+        form.update(info=info)
+        form.update(extra_info=extra_info)
+    return render(request, 'form/form_info.html')
