@@ -80,10 +80,12 @@ def get_form(request, award_id):
     award = Award.objects.get(id=award_id)
     organization = Organization.objects.get(name=award.organization.name)
     principal = organization.principal
-    form_id = request.GET.get('id')
+    try:
+        form_id = request.GET.get('id')
+    except Exception as e:
+        return HttpResponse(status=422, content=u'%s' % e.message)
     form = Form.objects.get(form_id=form_id)
     file_name = form.extra_info.name
-    # file_name = file_name.split('/')[1]
     data = {
         'award': award,
         'principal': principal,
