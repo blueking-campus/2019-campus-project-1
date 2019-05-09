@@ -168,11 +168,9 @@
                                 <td>{{ form.created_time }}</td>
                                 <td>
                                     {% if form.status == 0 or form.status == 1 or form.status == 2%}
-                                        <a href="#" id="editBtn">编辑</a>
+                                        <a href="/form/get_form/{{ form.form_id }}/" id="editBtn">编辑</a>
                                     {% elif form.status == 1 %}
                                         <a href="#" id="applyBtn">重新申请</a>
-                                    {% elif form.status == 3 or form.status == 4 %}
-                                        <a href="/form/get_form/{{ form.form_id }}/" >查看</a>
                                     {% else %}
                                         <a href="#">申报</a>
                                     {% endif %}
