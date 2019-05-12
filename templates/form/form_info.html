@@ -213,28 +213,28 @@
         $("#extra").hide()
     });
     function modify(form_id) {
-            var applicant = $("#applicant").val();
-            var info = $("#info").val();
-            var files = $("#files").prop('files');
-            var result = new FormData();
-            result.append('appendix',files[0]);
-            result.append('applicant',applicant);
-            result.append('info',info);
-            $.ajax({
-                type: 'POST',
-                url: "/form/update_form/"+form_id+"/",
-                cache: false,
-                async: false,
-                contentType: false,
-                processData: false,
-                data: result,
-                headers: {"X-CSRFToken": $.cookie('csrftoken')},// 从Cookie取csrf_token，并设置ajax请求头
-                success: function (result) {
-                    alert("保存成功！");
-                    window.location.reload()
-                }
-            })
-        }
+        var applicant = $("#applicant").val();
+        var info = $("#info").val();
+        var files = $("#files").prop('files');
+        var result = new FormData();
+        result.append('appendix',files[0]);
+        result.append('applicant',applicant);
+        result.append('info',info);
+        $.ajax({
+            type: 'POST',
+            url: "/form/update_form/"+form_id+"/",
+            cache: false,
+            async: false,
+            contentType: false,
+            processData: false,
+            data: result,
+            headers: {"X-CSRFToken": $.cookie('csrftoken')},// 从Cookie取csrf_token，并设置ajax请求头
+            success: function (result) {
+                alert("保存成功！");
+                window.location.reload()
+            }
+        })
+    }
 </script>
 </body>
 

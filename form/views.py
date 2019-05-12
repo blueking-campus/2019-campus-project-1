@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
 import os
+import datetime
 
-from django import forms
 from django.core.paginator import Paginator, InvalidPage
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -112,3 +112,53 @@ def update_form(request, form_id):
         form.update(info=info)
         form.update(extra_info=extra_info)
     return render(request, 'form/form_info.html')
+
+
+def search_form(request):
+    try:
+        # result = json.loads(request.body)
+        name = request.GET.get('name')
+        time = request.GET.get('time')
+        status = int(request.GET.get('status'))
+        current_page = int(request.GET.get('page', 1))
+    except Exception as e:
+        return HttpResponse(status=422, content=u'%s' % e.message)
+    start_time = time.split(u"&nbsp;-&nbsp;")[0].split(u'/')
+    end_time = time.split(u"&nbsp;-&nbsp;")[1].split(u'/')
+    start_time = datetime.datetime(int(start_time[0]), int(start_time[1]), int(start_time[2]))
+    end_time = datetime.datetime(int(end_time[0]), int(end_time[1]), int(end_time[2]))
+    if status == -1:
+        forms = Form.objects.filter(
+            award__name__contains=name,
+            updated_time__range=(start_time, end_time)
+        )
+    else:
+        forms = Form.objects.filter(
+            award__name__contains=name,
+            updated_time__range=(start_time, end_time),
+            status=status
+        )
+    paginator = Paginator(forms, 5)
+    page_num = paginator.num_pages
+    try:
+        form_list = paginator.page(current_page)
+        if form_list.has_next():
+            next_page = current_page + 1
+        else:
+            next_page = current_page
+        if form_list.has_previous():
+            previous_page = current_page - 1
+        else:
+            previous_page = current_page
+        data = {
+            'count': paginator.count,
+            'page_num': range(1, page_num + 1),
+            'current_page': current_page,
+            'next_page': next_page,
+            'previous_page': previous_page,
+            'results': form_list
+        }
+    except InvalidPage:
+        # 如果请求的页数不存在，重定向页面
+        return HttpResponse('找不到页面的内容！')
+    return render(request, 'form/form.html', data)
