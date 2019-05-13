@@ -129,19 +129,19 @@
                             <label class="control-label col-sm-3 pt0" for="name">奖项名称</label>
                             <div id="name">{{ award.name }}</div>
                         </div>
-                        <br/>
+                        <br/><br/>
                         <div>
-                            <label class="control-label col-sm-3 pt0" for="name">参评要求</label>
+                            <label class="control-label col-sm-3 pt0" for="requirement">参评要求</label>
                             <div id="requirement">{% autoescape off %} {{ award.requirement }} {% endautoescape %}</div>
                         </div>
-                        <br/>
+                        <br/><br/>
                         <div>
-                            <label class="control-label col-sm-3 pt0" for="name">审核人</label>
+                            <label class="control-label col-sm-3 pt0" for="principal">审核人</label>
                             <div id="principal">{{ principal }}</div>
                         </div>
-                        <br/>
+                        <br/><br/>
                         <div>
-                            <label class="control-label col-sm-3 pt0" for="name">状态</label>
+                            <label class="control-label col-sm-3 pt0">状态</label>
                             {% if award.status %}
                                 <div>生效</div>
                             {% else %}
@@ -149,27 +149,27 @@
                             {% endif %}
 
                         </div>
-                        <br/>
+                        <br/><br/>
                         <div>
-                            <label class="control-label col-sm-3 pt0" for="name">奖项级别</label>
+                            <label class="control-label col-sm-3 pt0" for="level">奖项级别</label>
                             <div id="level">{{ award.level.name }}</div>
                         </div>
-                        <br/>
+                        <br/><br/>
                         <div>
-                            <label class="control-label col-sm-3 pt0" for="name">所属组织</label>
+                            <label class="control-label col-sm-3 pt0" for="organization">所属组织</label>
                             <div id="organization">{{ award.organization.name }}</div>
                         </div>
-                        <br/>
+                        <br/><br/>
                         <div>
-                            <label class="control-label col-sm-3 pt0" for="name">开始日期</label>
+                            <label class="control-label col-sm-3 pt0" for="submit_start_time">开始日期</label>
                             <div id="submit_start_time">{{ award.submit_start_time }}</div>
                         </div>
-                        <br/>
+                        <br/><br/>
                         <div>
-                            <label class="control-label col-sm-3 pt0" for="name">结束日期</label>
+                            <label class="control-label col-sm-3 pt0" for="submit_end_time">结束日期</label>
                             <div id="submit_end_time">{{ award.submit_end_time }}</div>
                         </div>
-                        <br/>
+                        <br/><br/>
 
                     </div>
                 </div>
