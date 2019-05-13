@@ -112,7 +112,6 @@ def reject_form(request):
     return HttpResponseRedirect('/review/')
 
 
-
 def pass_form(request):
     """
     通过指定申请表接口
