@@ -144,29 +144,41 @@
                                     <td>{{ form.creator }}</td>
                                     {% ifequal form.status 0 %}
                                     <td>申报中</td>
-                                    {% endifequal %}
-                                    {% ifequal form.status 1 %}
-                                    <td>未通过</td>
-                                    {% endifequal %}
-                                    {% ifequal form.status 2 %}
-                                    <td>已通过</td>
-                                    {% endifequal %}
-                                    {% ifequal form.status 3 %}
-                                    <td>未获奖</td>
-                                    {% endifequal %}
-                                    {% ifequal form.status 4 %}
-                                    <td>已获奖</td>
-                                    {% endifequal %}
                                     <td>{{ form.created_time }}</td>
                                     <td>{{ form.updater }}</td>
                                     <td>
-                                        <a href="review/api/pass_form/?form_id={{ form.form_id }}">通过</a>
-                                        <a href="review/api/reject_form/?award_id={{ form.form_id }}">驳回</a>
+                                        <a href="/review/api/pass_review/?form_id={{ form.form_id }}">通过</a>
+                                        <a href="/review/api/reject_review/?form_id={{ form.form_id }}">驳回</a>
                                     </td>
+                                    {% endifequal %}
+                                    {% ifequal form.status 1 %}
+                                    <td>未通过</td>
+                                    <td>{{ form.created_time }}</td>
+                                    <td>{{ form.updater }}</td>
+                                    <td>---</td>
+                                    {% endifequal %}
+                                    {% ifequal form.status 2 %}
+                                    <td>已通过</td>
+                                    <td>{{ form.created_time }}</td>
+                                    <td>{{ form.updater }}</td>
+                                    <td>
+                                        <a href="/review/edit_review/{{ form.form_id }}">评奖</a>
+                                    </td>
+                                    {% endifequal %}
+                                    {% ifequal form.status 3 %}
+                                    <td>未获奖</td>
+                                    <td>{{ form.created_time }}</td>
+                                    <td>{{ form.updater }}</td>
+                                    <td>---</td>
+                                    {% endifequal %}
+                                    {% ifequal form.status 4 %}
+                                    <td>已获奖</td>
+                                    <td>{{ form.created_time }}</td>
+                                    <td>{{ form.updater }}</td>
+                                    <td>---</td>
+                                    {% endifequal %}
                                 </tr>
                                 {% endfor %}
-
-
                                 </tbody>
                             </table>
                             {% ifnotequal cur_page 1 %}

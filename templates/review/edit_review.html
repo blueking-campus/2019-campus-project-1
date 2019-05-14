@@ -242,7 +242,7 @@
             'status': status
         };
         $.ajax({
-            url: "review/api/update_review/",
+            url: "/review/api/update_review/",
             type: "POST",
             headers: {"X-CSRFToken": $.cookie('csrftoken')},  // 从Cookie取csrf_token，并设置ajax请求头
             data: JSON.stringify(data),
