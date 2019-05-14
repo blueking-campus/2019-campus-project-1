@@ -138,7 +138,7 @@
                     <div class="form-group clearfix">
                         <div class="col-sm-9 col-sm-offset-3">
                             <button type="button" class="king-btn mr10  king-success" id="modifyBtn">修改</button>
-                            <button type="button" class="king-btn king-default " id="saveBtn">保存</button>
+                            <button type="button" class="king-btn king-default " onclick="save()" id="saveBtn">保存</button>
                         </div>
                     </div>
                 </form>
@@ -160,7 +160,7 @@
         $("#principal").attr("disabled",false);
         $("#users").attr("disabled",false);
     });
-    $("#saveBtn").click(function () {
+    function save() {
             let name = $("#name").val();
             let principal = $("#principal").val();
             let users = $("#users").val();
@@ -181,7 +181,7 @@
                     window.location.reload()
                 }
             })
-        })
+        }
 </script>
 </body>
 

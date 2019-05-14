@@ -83,11 +83,10 @@ def update_organization(request):
 def delete_organization(request):
     try:
         result = json.loads(request.body)
-        organization_id = int(result['id'])
-        organization = Organization.objects.filter(id=organization_id)
-        organization.delete()
     except Exception as e:
         return APIServerError(e.message)
+    organization_id = int(result['id'])
+    Organization.objects.filter(id=organization_id).update(is_delete=True)
     return render(request, 'organization/organization.html')
 
 
