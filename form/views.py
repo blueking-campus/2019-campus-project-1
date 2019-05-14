@@ -54,41 +54,40 @@ def create_form(request, award_id):
     principal = organization.principal
     if request.method == "POST":
         extra_info = request.FILES.get('appendix')
-        file_name = 'static/file/%s' % extra_info.name
-        with open(file_name, 'wb+') as destination:
-            for chunk in extra_info.chunks():
-                destination.write(chunk)
-        try:
-            applicant = request.POST.get("applicant")
-            info = request.POST.get("info")
-        except Exception as e:
-            return HttpResponse(status=422, content=u'%s' % e.message)
-        try:
-            updater = UserInfo.objects.get(auth_token=request.user)
+        applicant = request.POST.get("applicant")
+        info = request.POST.get("info")
+        updater = UserInfo.objects.filter(auth_token=request.user)[0]
+        if extra_info is None:
+            Form.objects.create(creator=applicant,
+                                info=info,
+                                award=award,
+                                updater=updater.qq,
+                                status=CHOICE_STATUS)
+        else:
+            file_name = 'static/file/%s' % extra_info.name
+            with open(file_name, 'wb+') as destination:
+                for chunk in extra_info.chunks():
+                    destination.write(chunk)
             Form.objects.create(creator=applicant,
                                 info=info,
                                 award=award,
                                 updater=updater.qq,
                                 extra_info=extra_info,
                                 status=CHOICE_STATUS)
-            response = {
-                "result": True,
-                "code": 0,
-                "data": {},
-                "message": "创建申报书成功"
-            }
-            return APIResult(response)
-        except:
-            response = {
-                "result": False,
-                "code": 400,
-                "data": {},
-                "message": "创建申报书失败"
-            }
-            return APIServerError(response)
+        response = {
+            "result": True,
+            "code": 0,
+            "data": {},
+            "message": "创建申报书成功"
+        }
+        return APIResult(response)
     else:
+        IS_NEED_AFFIX = 0
+        if award.has_extra_info:
+            IS_NEED_AFFIX = 1
         return render(request, 'form/create_form.html', {'award': award,
-                                                     'principal': principal})
+                                                         'principal': principal,
+                                                         'affix': IS_NEED_AFFIX})
 
 
 def get_form(request, award_id):
@@ -121,12 +120,22 @@ def update_form(request, form_id):
     info = request.POST.get("info")
     extra_info = request.FILES.get('appendix')
     form = Form.objects.filter(form_id=form_id)
-    file_name = 'static/file/%s' % extra_info.name
-    with open(file_name, 'wb+') as destination:
-        for chunk in extra_info.chunks():
-            destination.write(chunk)
-    form.update(creator=applicant, info=info, extra_info=extra_info)
-    return render(request, 'form/form_info.html')
+    if extra_info is None:
+        form.update(creator=applicant, info=info)
+    else:
+        file_name = 'static/file/%s' % extra_info.name
+        with open(file_name, 'wb+') as destination:
+            for chunk in extra_info.chunks():
+                destination.write(chunk)
+        form.update(creator=applicant, info=info, extra_info=extra_info)
+    response = {
+        "result": True,
+        "code": 0,
+        "data": {},
+        "message": "修改申报书成功"
+    }
+    return APIResult(response)
+    # return render(request, 'form/form_info.html')
 
 
 def search_form(request):
