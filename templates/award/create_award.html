@@ -245,7 +245,7 @@
         organization = $('#input_organization').select2("val");
         submit_start_time = document.getElementById('input_start_time').value;
         submit_end_time = document.getElementById('input_end_time').value;
-        has_extra_info = $('#myCheck').bootstrapSwitch('state');
+        has_extra_info = $('#my_check').bootstrapSwitch('state');
         status = $('input[name=status]:checked').val();
         data = {
             'name': name,
@@ -257,35 +257,35 @@
             'has_extra_info': has_extra_info,
             'status': status
         };
-        $.ajax({
-            url: "../api/create_award/",
-            type: "POST",
-            headers: {"X-CSRFToken": $.cookie('csrftoken')},  // 从Cookie取csrf_token，并设置ajax请求头
-            data: JSON.stringify(data),
-            success: function (data) {
-                var d = dialog({
-                    width: 260,
-                    title: '提示',
-                    quickClose: true,
-                    content: '<div class="king-notice-box king-notice-success"><p class="king-notice-text">'+data['data']['message']+'</p></div>',
-                    ok: function () {
-                        console.log(this)
-                        // do something
-                    },
-                    cancelValue: '取消',
-                    cancel: function () {
-                        console.log(this)
-                        // do something
-                    },
-                    onshow: function () {
-                        console.log(this)
-                        // do something
-                    }
-                });
-                d.show();
-                window.location.href = '/award'
-            }
-        });
+//        $.ajax({
+//            url: "../api/create_award/",
+//            type: "POST",
+//            headers: {"X-CSRFToken": $.cookie('csrftoken')},  // 从Cookie取csrf_token，并设置ajax请求头
+//            data: JSON.stringify(data),
+//            success: function (data) {
+//                var d = dialog({
+//                    width: 260,
+//                    title: '提示',
+//                    quickClose: true,
+//                    content: '<div class="king-notice-box king-notice-success"><p class="king-notice-text">'+data['data']['message']+'</p></div>',
+//                    ok: function () {
+//                        console.log(this)
+//                        // do something
+//                    },
+//                    cancelValue: '取消',
+//                    cancel: function () {
+//                        console.log(this)
+//                        // do something
+//                    },
+//                    onshow: function () {
+//                        console.log(this)
+//                        // do something
+//                    }
+//                });
+//                d.show();
+//                window.location.href = '/award'
+//            }
+//        });
     });
 
 </script>
