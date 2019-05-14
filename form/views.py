@@ -82,12 +82,8 @@ def create_form(request, award_id):
         }
         return APIResult(response)
     else:
-        IS_NEED_AFFIX = 0
-        if award.has_extra_info:
-            IS_NEED_AFFIX = 1
         return render(request, 'form/create_form.html', {'award': award,
-                                                         'principal': principal,
-                                                         'affix': IS_NEED_AFFIX})
+                                                         'principal': principal})
 
 
 def get_form(request, award_id):
@@ -135,7 +131,6 @@ def update_form(request, form_id):
         "message": "修改申报书成功"
     }
     return APIResult(response)
-    # return render(request, 'form/form_info.html')
 
 
 def search_form(request):
