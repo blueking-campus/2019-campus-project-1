@@ -12,4 +12,5 @@ urlpatterns = patterns(
     url(r'^award/', include('award.urls')),
     url(r'^organization/', include('organization.urls')),
     url(r'^form/', include('form.urls')),
+    url(r'^review/', include('review.urls')),
 )
