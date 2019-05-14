@@ -91,7 +91,7 @@ def update_review(request):
         return APIResult(response)
 
 
-def reject_form(request):
+def reject_review(request):
     """
     驳回指定申请表接口
     """
@@ -100,7 +100,7 @@ def reject_form(request):
     return HttpResponseRedirect('/review/')
 
 
-def pass_form(request):
+def pass_review(request):
     """
     通过指定申请表接口
     """
