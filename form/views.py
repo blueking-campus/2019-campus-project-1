@@ -48,6 +48,7 @@ def get_form_list(request):
 
 # 新建申报
 def create_form(request, award_id):
+    CHOICE_STATUS = 0
     award = Award.objects.get(id=award_id)
     organization = Organization.objects.get(name=award.organization.name)
     principal = organization.principal
@@ -69,21 +70,41 @@ def create_form(request, award_id):
                                 award=award,
                                 updater=updater.qq,
                                 extra_info=extra_info,
-                                status=0)
+                                status=CHOICE_STATUS)
+            response = {
+                "result": True,
+                "code": 0,
+                "data": {},
+                "message": "创建申报书成功"
+            }
+            return APIResult(response)
         except:
-            return APIServerError(u"创建失败！")
-    return render(request, 'form/create_form.html', {'award': award,
+            response = {
+                "result": False,
+                "code": 400,
+                "data": {},
+                "message": "创建申报书失败"
+            }
+            return APIServerError(response)
+    else:
+        return render(request, 'form/create_form.html', {'award': award,
                                                      'principal': principal})
 
 
 def get_form(request, award_id):
     award = Award.objects.get(id=award_id)
-    organization = Organization.objects.get(name=award.organization.name)
-    principal = organization.principal
     try:
-        form_id = request.GET.get('id')
-    except Exception as e:
-        return HttpResponse(status=422, content=u'%s' % e.message)
+        organization = Organization.objects.get(name=award.organization.name)
+    except:
+        response = {
+            "result": False,
+            "code": 400,
+            "data": {},
+            "message": "该组织不存在"
+        }
+        return APIResult(response)
+    principal = organization.principal
+    form_id = request.GET.get('id')
     form = Form.objects.get(form_id=form_id)
     file_name = form.extra_info.name
     data = {
@@ -96,38 +117,29 @@ def get_form(request, award_id):
 
 
 def update_form(request, form_id):
-    try:
-        applicant = request.POST.get("applicant")
-        info = request.POST.get("info")
-        extra_info = request.FILES.get('appendix')
-        file_name = 'static/file/%s' % extra_info.name
-        with open(file_name, 'wb+') as destination:
-            for chunk in extra_info.chunks():
-                destination.write(chunk)
-    except Exception as e:
-        return HttpResponse(status=422, content=u'%s' % e.message)
+    applicant = request.POST.get("applicant")
+    info = request.POST.get("info")
+    extra_info = request.FILES.get('appendix')
     form = Form.objects.filter(form_id=form_id)
-    if form.exists():
-        form.update(creator=applicant)
-        form.update(info=info)
-        form.update(extra_info=extra_info)
+    file_name = 'static/file/%s' % extra_info.name
+    with open(file_name, 'wb+') as destination:
+        for chunk in extra_info.chunks():
+            destination.write(chunk)
+    form.update(creator=applicant, info=info, extra_info=extra_info)
     return render(request, 'form/form_info.html')
 
 
 def search_form(request):
-    try:
-        # result = json.loads(request.body)
-        name = request.GET.get('name')
-        time = request.GET.get('time')
-        status = int(request.GET.get('status'))
-        current_page = int(request.GET.get('page', 1))
-    except Exception as e:
-        return HttpResponse(status=422, content=u'%s' % e.message)
+    CHOICE_STATUS = -1
+    name = request.GET.get('name')
+    time = request.GET.get('time')
+    status = int(request.GET.get('status'))
+    current_page = int(request.GET.get('page', 1))
     start_time = time.split(u"&nbsp;-&nbsp;")[0].split(u'/')
     end_time = time.split(u"&nbsp;-&nbsp;")[1].split(u'/')
     start_time = datetime.datetime(int(start_time[0]), int(start_time[1]), int(start_time[2]))
     end_time = datetime.datetime(int(end_time[0]), int(end_time[1]), int(end_time[2]))
-    if status == -1:
+    if status == CHOICE_STATUS:
         forms = Form.objects.filter(
             award__name__contains=name,
             updated_time__range=(start_time, end_time)

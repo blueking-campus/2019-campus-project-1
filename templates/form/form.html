@@ -170,7 +170,7 @@
                                 <td>{{ form.created_time }}</td>
                                 <td>
                                     {% if form.status == 0 or form.status == 1 or form.status == 2%}
-                                        <a href="/form/get_form/{{ form.form_id }}/" id="editBtn">编辑</a>
+                                        <a href="/form/get_form/{{ form.award.id}}/?id={{ form.form_id }}">编辑</a>
                                     {% elif form.status == 1 %}
                                         <a href="#" id="applyBtn">重新申请</a>
                                     {% else %}
@@ -221,19 +221,12 @@
         var name = $("#form_name").val();
         var status = $("#status").val();
         var time = $("#date_range").val();
-        var result = {
-            "name": name,
-            "status": status,
-            "time": time,
-        };
-        console.log(result);
         $.ajax({
             type: 'POST',
             cache: false,
             async: false,
             contentType: false,
             processData: false,
-            {#data: JSON.stringify(result),#}
             headers: {"X-CSRFToken": $.cookie('csrftoken')},// 从Cookie取csrf_token，并设置ajax请求头
         });
         var a = document.createElement('a');
