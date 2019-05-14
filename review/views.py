@@ -111,9 +111,5 @@ def pass_form(request):
 
 def get_user_qq(uin):
     qq = uin.split('o')[1]
-    while True:
-        if qq[0] == '0':
-            qq = qq[1:]
-        else:
-            break
+    qq = str(int(qq))
     return qq
