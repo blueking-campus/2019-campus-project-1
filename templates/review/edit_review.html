@@ -93,7 +93,7 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li>
-                            <a href="javascript:;">
+                            <a href="javascript:void(0);">
                                 <img src="http://q1.qlogo.cn/g?b=qq&amp;nk=1181849919&amp;s=100&amp;t=1556272002"
                                      onerror="javascript:this.src='/static/images/getheadimg.jpg';" width="30"
                                      alt="Avatar" style="border-radius:50%;margin-right:10px;">
@@ -192,7 +192,9 @@
                         <br/><br/>
                         <div>
                             <label class="control-label col-sm-3 pt0">附件</label>
-                            <p><button type="button" id="download">下载</button></p>
+                            <p>
+                                <button type="button" id="download">下载</button>
+                            </p>
                         </div>
                         <br/><br/>
                         <div>
@@ -240,7 +242,7 @@
             'status': status
         };
         $.ajax({
-            url: "../../api/update_review/",
+            url: "review/api/update_review/",
             type: "POST",
             headers: {"X-CSRFToken": $.cookie('csrftoken')},  // 从Cookie取csrf_token，并设置ajax请求头
             data: JSON.stringify(data),
@@ -249,23 +251,20 @@
                     width: 260,
                     title: '提示',
                     quickClose: true,
-                    content: '<div class="king-notice-box king-notice-success"><p class="king-notice-text">' + data['data']['message'] + '</p></div>',
+                    content: '<div class="king-notice-box king-notice-success">' +
+                    '<p class="king-notice-text">'
+                    + data['data']['message']
+                    + '</p></div>',
                     ok: function () {
-                        console.log(this)
-                        // do something
                     },
                     cancelValue: '取消',
                     cancel: function () {
-                        console.log(this)
-                        // do something
                     },
                     onshow: function () {
-                        console.log(this)
-                        // do something
                     }
                 });
                 d.show();
-                window.location.href = '/award'
+                window.location.href = '/review'
             }
         });
     });
