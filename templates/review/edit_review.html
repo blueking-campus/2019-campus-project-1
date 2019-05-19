@@ -94,10 +94,10 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li>
                             <a href="javascript:void(0);">
-                                <img src="http://q1.qlogo.cn/g?b=qq&amp;nk=1181849919&amp;s=100&amp;t=1556272002"
+                                <img src="http://q1.qlogo.cn/g?b=qq&amp;nk={{ qq }}&amp;s=100&amp;t=1556272002"
                                      onerror="javascript:this.src='/static/images/getheadimg.jpg';" width="30"
                                      alt="Avatar" style="border-radius:50%;margin-right:10px;">
-                                <span>管理者 ( admin )</span>
+                                <span>{{ qq }}</span>
                             </a>
                         </li>
                     </ul>
@@ -113,12 +113,12 @@
                     <div class="navbar-collapse navbar-hov">
                         <ul class="nav navbar-nav side-nav" style="padding-bottom: 0">
                             <li>
-                                <a href="/organization/"> <i class="fa fa-dashboard "> </i>
-                                    <span>组织管理</span> <i class="fa fa-fw "></i> </a>
+                                <a href="/form/"> <i class="fa fa-dashboard "> </i>
+                                    <span>我的申报</span> <i class="fa fa-fw "></i> </a>
                             </li>
                             <li class="active">
-                                <a href="/award/"> <i class="fa fa-wrench "> </i>
-                                    <span>奖项信息</span> <i class="fa fa-fw "></i> </a>
+                                <a href="/review/"> <i class="fa fa-wrench "> </i>
+                                    <span>我的审核</span> <i class="fa fa-fw "></i> </a>
                             </li>
                         </ul>
                     </div>
@@ -231,7 +231,15 @@
 <script type="text/javascript">
     window.onload = function () {
         sessionStorage.clear();
+        qq = get_qq();
     };
+
+    function get_qq() {
+        var uin = document.cookie.split("uin=")[1].split(";")[0];
+        uin = parseInt(uin);
+        return uin
+    }
+
     $('#submit').click(function () {
         form_id = document.getElementById('get_id').innerHTML;
         comment = $('#comment').val();
@@ -264,7 +272,7 @@
                     }
                 });
                 d.show();
-                window.location.href = '/review'
+                window.location.href = '/review/'
             }
         });
     });
