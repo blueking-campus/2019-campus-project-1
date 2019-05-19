@@ -94,10 +94,9 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li>
                             <a href="javascript:;">
-                                <img src="http://q1.qlogo.cn/g?b=qq&amp;nk=1181849919&amp;s=100&amp;t=1556272002"
-                                     onerror="javascript:this.src='/static/images/getheadimg.jpg';" width="30"
-                                     alt="Avatar" style="border-radius:50%;margin-right:10px;">
-                                <span>管理者 ( admin )</span>
+                                <img onerror="javascript:this.src='/static/images/getheadimg.jpg';" width="30"
+                                     alt="Avatar" style="border-radius:50%;margin-right:10px;" id="user_icon">
+                                <span id="user_qq"></span>
                             </a>
                         </li>
                     </ul>
@@ -242,10 +241,25 @@
         CKEDITOR.replace('input_requirement');
         $('#my_check').bootstrapSwitch();
         $("#input_level").select2();
-        window.onload = function () {
-            sessionStorage.clear();
-        };
+        sessionStorage.clear();
+        var qq = get_qq();
+        document.getElementById('user_qq').innerHTML = qq;
+        document.getElementById('user_icon').setAttribute("src", "http://q1.qlogo.cn/g?b=qq&nk=" + qq + "&s=100&t=1558273954")
     };
+
+    function get_qq() {
+        var uin = document.cookie.split("uin=")[1].split(";")[0];
+        while (true) {
+            if (uin[0] == "o") {
+                uin = uin.slice(1)
+            }
+            else {
+                break
+            }
+        }
+        return uin
+    }
+
     $('#plugin9_demo1,#plugin9_demo2').datetimepicker({
         language: 'zh-TW',
         weekStart: 1,
@@ -289,7 +303,7 @@
                     quickClose: true,
                     content: '<div class="king-notice-box king-notice-success"><p class="king-notice-text">' + data['data']['message'] + '</p></div>',
                     ok: function () {
-                        if (data['data']['result']==0){
+                        if (data['data']['result'] == 0) {
                             window.location.href = '/award'
                         }
                         else {

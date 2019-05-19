@@ -80,10 +80,9 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li>
                             <a href="javascript:;">
-                                <img src="http://q1.qlogo.cn/g?b=qq&amp;nk=1181849919&amp;s=100&amp;t=1556272002"
-                                     onerror="javascript:this.src='/static/images/getheadimg.jpg';" width="30"
-                                     alt="Avatar" style="border-radius:50%;margin-right:10px;">
-                                <span>管理者 ( admin )</span>
+                                <img onerror="javascript:this.src='/static/images/getheadimg.jpg';" width="30"
+                                     alt="Avatar" style="border-radius:50%;margin-right:10px;" id="user_icon">
+                                <span id="user_qq"></span>
                             </a>
                         </li>
                     </ul>
@@ -191,7 +190,24 @@
         }
         a = a + "</tbody>";
         $('#table').html(a);
+        var qq = get_qq();
+        document.getElementById('user_qq').innerHTML = qq;
+        document.getElementById('user_icon').setAttribute("src", "http://q1.qlogo.cn/g?b=qq&nk=" + qq + "&s=100&t=1558273954")
     };
+
+    function get_qq() {
+        var uin = document.cookie.split("uin=")[1].split(";")[0];
+        while (true) {
+            if (uin[0] == "o") {
+                uin = uin.slice(1)
+            }
+            else {
+                break
+            }
+        }
+        return uin
+    }
+
     $('#date_range_picker').daterangepicker({
         locale: {
             "format": 'YYYY/MM/DD'
