@@ -142,7 +142,7 @@
                             <textarea name="inputRequirement" id="input_requirement"></textarea>
                         </div>
                     </div>
-                    <div class="form-group clearfix plugin3_demo" id="plugin3_demo2">
+                    <div class="form-group clearfix plugin3_demo">
                         <!-- select2 通过javascript start -->
                         <label class="control-label col-sm-3 pt0">奖项级别：</label>
                         &nbsp;&nbsp;
@@ -154,11 +154,11 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group clearfix plugin3_demo" id="plugin3_demo2">
+                    <div class="form-group clearfix plugin3_demo">
                         <!-- select2 通过javascript start -->
                         <label class="control-label col-sm-3 pt0" for="input_organization">所属组织：</label>
                         &nbsp;&nbsp;
-                        <div class="select2-container select2_box" id="s2id_autogen4" style="width:300px;">
+                        <div class="select2-container select2_box" style="width:300px;">
                             <select id="input_organization" style="width: 150px;font-size: 12px">
                                 {% for organization in organizations %}
                                 <option value="{{organization.id}}">{{organization.name}}</option>
@@ -263,28 +263,29 @@
             headers: {"X-CSRFToken": $.cookie('csrftoken')},  // 从Cookie取csrf_token，并设置ajax请求头
             data: JSON.stringify(data),
             success: function (data) {
+
                 var d = dialog({
                     width: 260,
                     title: '提示',
                     quickClose: true,
-                    content: '<div class="king-notice-box king-notice-success"><p class="king-notice-text">'+data['data']['message']+'</p></div>',
+                    content: '<div class="king-notice-box king-notice-success"><p class="king-notice-text">' + data['data']['message'] + '</p></div>',
                     ok: function () {
-                        console.log(this)
-                        // do something
+                        if (data['data']['result']) {
+                            window.location.href = '/award/'
+                        }
+                        else {
+                            close()
+                        }
                     },
                     cancelValue: '取消',
                     cancel: function () {
-                        console.log(this)
-                        // do something
-                    },
-                    onshow: function () {
-                        console.log(this)
-                        // do something
+                        close()
                     }
                 });
                 d.show();
-                window.location.href = '/award'
             }
+
+
         });
     });
 

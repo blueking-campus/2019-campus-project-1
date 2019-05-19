@@ -99,11 +99,11 @@
                     <div class="navbar-collapse navbar-hov">
                         <ul class="nav navbar-nav side-nav">
                             <li>
-                                <a href="javascript:void(0);"> <i class="fa fa-dashboard "> </i>
+                                <a href="/organization/"> <i class="fa fa-dashboard "> </i>
                                     <span>组织管理</span> <i class="fa fa-fw "></i> </a>
                             </li>
                             <li class="active">
-                                <a href="javascript:void(0);"> <i class="fa fa-wrench "> </i>
+                                <a href="/award/"> <i class="fa fa-wrench "> </i>
                                     <span>奖项信息</span> <i class="fa fa-fw "></i> </a>
                             </li>
                         </ul>
@@ -118,8 +118,8 @@
                 <!-- <div class="king-page-topbar pl20 pr20 {{ marginStyle }}"> -->
                 <div class="king-page-topbar ">
                     <ul class="breadcrumb king-breadcrumb pl0 bg-transparent">
-                        <li><a href="javascript:void(0);">系统管理</a></li>
-                        <li><a href="javascript:void(0);">奖项信息</a></li>
+                        <li><a href="/award/">系统管理</a></li>
+                        <li><a href="/award/clone_award/">奖项信息</a></li>
                     </ul>
                 </div>
                 <!-- 面板 编辑 开始 -->
@@ -140,13 +140,13 @@
                                 <select id="input_organization" multiple="multiple"
                                         style="width: 150px;font-size: 12px">
                                     {% for organization in organizations %}
-                                        <option value="{{ organization.id }}">{{ organization.name }}</option>
+                                    <option value="{{ organization.id }}">{{ organization.name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                         </div>
                         <br/><br/>
-                        <label for="daterangepicker_demo2">申报时间：</label>
+                        <label for="date_range_picker">申报时间：</label>
                         <input type="text" class="form-control daterangepicker_demo" id="date_range_picker"
                                placeholder="选择日期..." style="width: 175px">
                         <br/><br/>
@@ -179,15 +179,15 @@
             '<th>申报时间</th><th>操作</th></tr></thead><tbody>';
         for (var i = 0; i < sessionStorage.length; i++) {
             award = JSON.parse(sessionStorage.getItem(sessionStorage.key(i)));
-            a = a + '<tr><td>' + award['organization'] + '</td><td>' +
+            a = a + '<tr id="' + award['id'] + '"><td>' + award['organization'] + '</td><td>' +
                 award['level'] + '</td><td>' +
                 award['pre_name'] + '</td><td>' +
                 award['name'] + '</td><td>' +
                 award['submit_start_time'] + '</td><td>' +
                 award['submit_end_time'] + '</td><td>' +
                 '<a href="/award/api/clone_award/info/?award_id=' + award['id'] + '">查看</a>' +
-                '&nbsp;&nbsp;<a href="/award/api/clone_award/edit_award/award_id=' + award['id'] + '">编辑</a>' +
-                '&nbsp;&nbsp;<a href="javascript:;" onclick="sessionStorage.removeItem(' + award['id'] + '); deleteCurrentRow(this);">删除</a></td></tr>'
+                '&nbsp;&nbsp;<a href="/award/api/clone_award/edit_award/?award_id=' + award['id'] + '">编辑</a>' +
+                '&nbsp;&nbsp;<a href="javascript:void(0);" class="delete" ">删除</a></td></tr>'
         }
         a = a + "</tbody>";
         $('#table').html(a);
@@ -236,33 +236,63 @@
                     '<th>申报奖项</th><th>替换后奖项名称</th><th>开始时间</th>' +
                     '<th>申报时间</th><th>操作</th></tr></thead><tbody>';
                 for (var i = 1; i <= data['count']; i++) {
-                    a = a + '<tr><td>' + data['result'][i - 1]['organization'] + '</td><td>' +
+                    a = a + '<tr id="' + data['result'][i - 1]['id'] + '"><td>' + data['result'][i - 1]['organization'] + '</td><td>' +
                         data['result'][i - 1]['level'] + '</td><td>' +
                         data['result'][i - 1]['pre_name'] + '</td><td>' +
                         data['result'][i - 1]['name'] + '</td><td>' +
                         data['result'][i - 1]['submit_start_time'] + '</td><td>' +
                         data['result'][i - 1]['submit_end_time'] + '</td><td>' +
                         '<a href="/award/api/clone_award/info/?page=' + i + '&award_id=' + data['result'][i - 1]['id'] + '">查看</a>' +
-                        '&nbsp;&nbsp;<a href="/award/api/clone_award/edit_award/award_id=' + data['result'][i - 1]['id'] + '">编辑</a>' +
-                        '&nbsp;&nbsp;<a href="javascript:;" onclick="sessionStorage.removeItem(' + data['result'][i - 1]['id'] + '); deleteCurrentRow(this);">删除</a></td></tr>'
+                        '&nbsp;&nbsp;<a href="/award/api/clone_award/edit_award/?award_id=' + data['result'][i - 1]['id'] + '">编辑</a>' +
+                        '&nbsp;&nbsp;<a href="javascript:;" class="delete">删除</a></td></tr>'
                 }
                 a = a + "</tbody>";
                 $('#table').html(a);
             }
         });
     });
+    $(".delete").click(function () {
+        id = $(this).parent().parent().attr("id");
+        var d = dialog({
+            width: 260,
+            title: '提醒',
+            content: '是否确认删除此条奖项',
+            okValue: "确认",
+            ok: function () {
+                sessionStorage.removeItem(id);
+                deleteCurrentRow(this);
+            },
+            cancelValue: '取消',
+            cancel: function () {
+                return false
+            }
+        });
+        d.show();
+    });
     $("#ready").click(function () {
-        var list = []
+        var list = [];
         for (var i = 0; i < sessionStorage.length; i++) {
             list[i] = JSON.parse(sessionStorage.getItem(sessionStorage.key(i)))
         }
         $.ajax({
-            url: "../api/clone_award/save_award/",
+            url: "/award/api/clone_award/save_award/",
             type: "POST",
-            headers: {"X-CSRFToken": $.cookie('csrftoken')},  // 从Cookie取csrf_token，并设置ajax请求头
+            headers: {"X-CSRFToken": $.cookie('csrftoken')},
             data: JSON.stringify(list),
-            success: function () {
-
+            success: function (data) {
+                var success_dialog = dialog({
+                    title: "提示",
+                    content: data["data"]["message"],
+                    width: 200,
+                    height: 100,
+                    onclose: function () {
+                        if (data["data"]["result"]) {
+                            sessionStorage.clear();
+                            window.location.href = "/award/clone_award/";
+                        }
+                    }
+                });
+                success_dialog.show();
             }
         })
 

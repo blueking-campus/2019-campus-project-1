@@ -63,7 +63,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="javascript:;">
+                    <a class="navbar-brand" href="javascript:void(0);">
                         <img src="https://magicbox.bk.tencent.com/static_api/v3/bk/images/logo.png" alt="" class="logo">
                     </a>
                 </div>
@@ -115,8 +115,8 @@
                 <!-- <div class="king-page-topbar pl20 pr20 {{ marginStyle }}"> -->
                 <div class="king-page-topbar ">
                     <ul class="breadcrumb king-breadcrumb pl0 bg-transparent">
-                        <li><a href="javascript:void(0);">系统管理</a></li>
-                        <li><a href="javascript:void(0);">奖项信息</a></li>
+                        <li><a href="/award/">系统管理</a></li>
+                        <li><a href="/award/">奖项信息</a></li>
                     </ul>
                 </div>
                 <!-- 面板 编辑 开始 -->
@@ -134,7 +134,7 @@
 
                             <select id="input_organization" style="width: 150px;height: 34px;font-size: 12px">
                                 {% for organization in organizations %}
-                                    <option value="{{ organization.id }}">{{ organization.name }}</option>
+                                <option value="{{ organization.id }}">{{ organization.name }}</option>
                                 {% endfor %}
                             </select>
 
@@ -166,7 +166,7 @@
                 <div class="container-fluid mb0 " style="padding: 0px">
                     <div class="row">
                         <div class="col-md-7" style="width:100%!important;">
-                            <table class="table mb0 pr15 ranger-box2  ">
+                            <table class="table mb0 pr15 ranger-box2  " id="tabel">
                                 <thead>
                                 <tr>
                                     <th>所属组织</th>
@@ -182,42 +182,41 @@
                                 </thead>
                                 <tbody>
                                 {% for award in awards %}
-                                    <tr>
-                                        <td>{{ award.organization.name }}</td>
-                                        <td>{{ award.level.name }}</td>
-                                        <td>{{ award.name }}</td>
-                                        {% if award.status %}
-                                            <td>生效</td>
-                                        {% else %}
-                                            <td>过期</td>
-                                        {% endif %}
-                                        <td>{{ award.submit_start_time }}</td>
-                                        <td>{{ award.submit_end_time }}</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>
-                                            <a href="/award/api/get_award/?award_id={{ award.id }}">查看</a>
-                                            <!--<a href="">克隆</a>-->
-                                            <a href="/award/api/edit_award/?award_id={{ award.id }}">编辑</a>
-                                            <a href="/award/api/delete_award/?award_id={{ award.id }}"
-                                               class="delete">删除</a>
-                                        </td>
-                                    </tr>
+                                <tr id="{{ award.info.id }}">
+                                    <td>{{ award.info.organization.name }}</td>
+                                    <td>{{ award.info.level.name }}</td>
+                                    <td>{{ award.info.name }}</td>
+                                    {% if award.info.status %}
+                                    <td>生效</td>
+                                    {% else %}
+                                    <td>过期</td>
+                                    {% endif %}
+                                    <td>{{ award.info.submit_start_time }}</td>
+                                    <td>{{ award.info.submit_end_time }}</td>
+                                    <td>{{ award.count }}</td>
+                                    <td>{{ award.awarded_count }}</td>
+                                    <td>
+                                        <a href="/award/api/get_award/?award_id={{ award.info.id }}">查看</a>
+                                        <!--<a href="">克隆</a>-->
+                                        <a href="/award/api/edit_award/?award_id={{ award.info.id }}">编辑</a>
+                                        <a href="javascript:void(0);" class="delete">删除</a>
+                                    </td>
+                                </tr>
                                 {% endfor %}
 
 
                                 </tbody>
                             </table>
                             {% ifnotequal cur_page 1 %}
-                                <a id="page_up" href="?page={{ cur_page|add:'-1' }}">
-                                    上一页
-                                </a>
+                            <a id="page_up" href="?page={{ cur_page|add:'-1' }}">
+                                上一页
+                            </a>
                             {% endifnotequal %}
                             第{{ cur_page }}/{{ all_page }}页
                             {% ifnotequal cur_page all_page %}
-                                <a id="page_down" href="?page={{ cur_page|add:'1' }}">
-                                    下一页
-                                </a>
+                            <a id="page_down" href="?page={{ cur_page|add:'1' }}">
+                                下一页
+                            </a>
                             {% endifnotequal %}
                         </div>
 
@@ -238,10 +237,10 @@
         }
     });
     $('#create').click(function () {
-        window.location.href = 'create/'
+        window.location.href = '/award/create/'
     });
     $("#clone").click(function () {
-        window.location.href = 'clone_award/'
+        window.location.href = '/award/clone_award/'
     });
     $("#search").click(function () {
         name = $('#input_award_name').val();
@@ -256,30 +255,31 @@
         };
 
         var a = document.createElement('a');
-        a.setAttribute('href', "api/search_award/?name=" + name + "&time=" + time + "&organization_id=" + organization_id + "&status=" + status);
+        a.setAttribute('href', "/award/api/search_award/?name=" + name + "&time=" + time + "&organization_id=" + organization_id + "&status=" + status);
         a.setAttribute('id', 'startTelMedicine');
         if (document.getElementById('startTelMedicine')) {
             document.body.removeChild(document.getElementById('startTelMedicine'));
         }
         document.body.appendChild(a);
         a.click();
-    })
-    $('.delete').click(function () {
+    });
+    $(".delete").click(function () {
+        id = $(this).parent().parent().attr("id");
         var d = dialog({
             width: 260,
             title: '提醒',
             content: '是否确认删除此条奖项',
             okValue: "确认",
             ok: function () {
-
+                window.location.href = "/award/api/delete_award/?award_id=" + id;
             },
             cancelValue: '取消',
             cancel: function () {
-
+                return false
             }
         });
         d.show();
-    })
+    });
 
 
 </script>

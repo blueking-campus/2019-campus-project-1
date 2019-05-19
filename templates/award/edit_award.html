@@ -150,11 +150,11 @@
                         <div class="select2-container select2_box" id="s2id_autogen3" style="width:300px;">
                             <select id="input_level" style="width: 100px;font-size: 12px">
                                 {% for level in levels %}
-                                    {% ifequal award.level.id level.id %}
-                                        <option value="{{ level.id }}" selected>{{ level.name }}</option>
-                                    {% else %}
-                                        <option value="{{ level.id }}">{{ level.name }}</option>
-                                    {% endifequal %}
+                                {% ifequal award.level.id level.id %}
+                                <option value="{{ level.id }}" selected>{{ level.name }}</option>
+                                {% else %}
+                                <option value="{{ level.id }}">{{ level.name }}</option>
+                                {% endifequal %}
                                 {% endfor %}
                             </select>
                         </div>
@@ -192,7 +192,12 @@
                     <div class="form-group clearfix king-block-content">
                         <label class="control-label col-sm-3 bk-lh30 pt0">是否上传附件：</label>
                         <div class="switch switch-large">
-                            <input type="checkbox" class="checkbox" checked="{{ award.has_extra_info }}" id='my_check'/>
+                            {% if award.has_extra_info %}
+                            <input type="checkbox" class="checkbox" value="{{ award.has_extra_info }}" checked
+                                   id='my_check'/>
+                            {% else %}
+                            <input type="checkbox" class="checkbox" value="{{ award.has_extra_info }}" id='my_check'/>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="form-group clearfix ">
@@ -201,20 +206,20 @@
                             <div class="radio pt0">
                                 <label class="mr10">
                                     {% if award.status %}
-                                        <input type="radio" name="status" class="bk-top5" value=True checked>
-                                        <span class="bk-lh30">生效</span>
+                                    <input type="radio" name="status" class="bk-top5" value=True checked>
+                                    <span class="bk-lh30">生效</span>
                                     {% else %}
-                                        <input type="radio" name="status" class="bk-top5" value=True>
-                                        <span class="bk-lh30">生效</span>
+                                    <input type="radio" name="status" class="bk-top5" value=True>
+                                    <span class="bk-lh30">生效</span>
                                     {% endif %}
                                 </label>
                                 <label class="mr10">
                                     {% if award.status %}
-                                        <input type="radio" name="status" class="bk-top5" value=False>
-                                        <span class="bk-lh30">过期</span>
+                                    <input type="radio" name="status" class="bk-top5" value=False>
+                                    <span class="bk-lh30">过期</span>
                                     {% else %}
-                                        <input type="radio" name="status" class="bk-top5" value=False checked>
-                                        <span class="bk-lh30">过期</span>
+                                    <input type="radio" name="status" class="bk-top5" value=False checked>
+                                    <span class="bk-lh30">过期</span>
                                     {% endif %}
                                 </label>
                             </div>
@@ -236,7 +241,7 @@
     window.onload = function () {
         CKEDITOR.replace('input_requirement');
         $('#my_check').bootstrapSwitch();
-        $("#input_level").select2()
+        $("#input_level").select2();
         window.onload = function () {
             sessionStorage.clear();
         };
@@ -259,7 +264,7 @@
         organization = document.getElementById('input_organization').value;
         submit_start_time = document.getElementById('input_start_time').value;
         submit_end_time = document.getElementById('input_end_time').value;
-        has_extra_info = $('#myCheck').bootstrapSwitch('state');
+        has_extra_info = $('#my_check').bootstrapSwitch('state');
         status = $('input[name=status]:checked').val();
         data = {
             'id': id,
@@ -273,32 +278,30 @@
             'status': status
         };
         $.ajax({
-            url: "../../api/update_award/",
+            url: "/award/api/update_award/",
             type: "POST",
             headers: {"X-CSRFToken": $.cookie('csrftoken')},  // 从Cookie取csrf_token，并设置ajax请求头
             data: JSON.stringify(data),
             success: function (data) {
-                var d = dialog({
+                var show_dialog = dialog({
                     width: 260,
                     title: '提示',
                     quickClose: true,
                     content: '<div class="king-notice-box king-notice-success"><p class="king-notice-text">' + data['data']['message'] + '</p></div>',
                     ok: function () {
-                        console.log(this)
-                        // do something
+                        if (data['data']['result']==0){
+                            window.location.href = '/award'
+                        }
+                        else {
+                            close()
+                        }
                     },
                     cancelValue: '取消',
                     cancel: function () {
-                        console.log(this)
-                        // do something
-                    },
-                    onshow: function () {
-                        console.log(this)
-                        // do something
+                        close();
                     }
                 });
-                d.show();
-                window.location.href = '/award'
+                show_dialog.show();
             }
         });
     });

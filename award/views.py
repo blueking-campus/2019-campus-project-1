@@ -26,7 +26,7 @@ def index(request):
     awards = Award.objects.filter(is_delete=0)[offset: offset + limit]
     organizations = Organization.objects.all()
     return render(request, "award/award_index.html",
-                  {'awards': awards, 'all_page': all_page, 'cur_page': cur_page, 'organizations': organizations})
+                  {'awards': Award.to_array(awards), 'all_page': all_page, 'cur_page': cur_page, 'organizations': organizations})
 
 
 def create(request):
@@ -169,7 +169,7 @@ def update_award(request):
         id = int(req["id"])
         name = req["name"]
         requirement = req["requirement"]
-        organization = int(req["organization"])
+        organization = Organization.objects.get(name=req["organization"])
         level = Choice(id=req["level"])
         has_extra_info = req["has_extra_info"]
         status = bool(req["status"])
@@ -362,6 +362,14 @@ def save_clone_award(request):
                 "message": "保存奖项失败"
             }
             return APIServerError(response)
+        if req == []:
+            response = {
+                "result": True,
+                "code": 0,
+                "data": {},
+                "message": "请先选择要批量克隆的选项"
+            }
+            return APIResult((response))
         for award in req:
             id = award["id"]
             name = award["name"]
@@ -390,5 +398,3 @@ def save_clone_award(request):
             "message": "创建奖项成功"
         }
         return APIResult(response)
-    else:
-        pass

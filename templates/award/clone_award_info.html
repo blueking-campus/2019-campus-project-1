@@ -71,9 +71,9 @@
                 <div class="collapse navbar-collapse navbar-responsive-collapse" id="bk-example-navbar-collapse-3">
                     <ul class="nav navbar-nav ">
                         <!--<li :class="{'bk-cur':item.active}"  v-for="item in renderData.items">-->
-                        <li><a href="javascript:void(0);">奖项申报<span></span></a></li>
-                        <li class="bk-cur"><a href="javascript:void(0);">系统管理<span></span></a></li>
-                        <li><a href="javascript:void(0);">个人中心<span></span></a></li>
+                        <li><a href="/" onclick="clean()">奖项申报<span></span></a></li>
+                        <li class="bk-cur"><a href="/award/" onclick="clean()">系统管理<span></span></a></li>
+                        <li><a href="/form/" onclick="clean()">个人中心<span></span></a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li>
@@ -97,11 +97,11 @@
                     <div class="navbar-collapse navbar-hov">
                         <ul class="nav navbar-nav side-nav">
                             <li>
-                                <a href="javascript:void(0);"> <i class="fa fa-dashboard "> </i>
+                                <a href="/organization/" onclick="clean()"> <i class="fa fa-dashboard "> </i>
                                     <span>组织管理</span> <i class="fa fa-fw "></i> </a>
                             </li>
                             <li class="active">
-                                <a href="javascript:void(0);"> <i class="fa fa-wrench "> </i>
+                                <a href="/award/" onclick="clean()"> <i class="fa fa-wrench "> </i>
                                     <span>奖项信息</span> <i class="fa fa-fw "></i> </a>
                             </li>
                         </ul>
@@ -116,9 +116,9 @@
                 <!-- <div class="king-page-topbar pl20 pr20 {{ marginStyle }}"> -->
                 <div class="king-page-topbar ">
                     <ul class="breadcrumb king-breadcrumb pl0 bg-transparent">
-                        <li><a href="javascript:void(0);">系统管理</a></li>
-                        <li><a href="/award">奖项信息</a></li>
-                        <li><a href="javascript:void(0);">奖项详情</a></li>
+                        <li><a href="/award/" onclick="clean()">系统管理</a></li>
+                        <li><a href="/award/clone_award/">奖项信息</a></li>
+                        <li><a href="#">奖项详情</a></li>
                     </ul>
                 </div>
             </div>
@@ -229,6 +229,9 @@
 <script type="text/javascript">
     var id = document.getElementById('get_id').innerHTML;
     $("#name").append(JSON.parse(sessionStorage.getItem(id))['name'])
+    function clean() {
+        sessionStorage.clear();
+    }
 </script>
 </body>
 

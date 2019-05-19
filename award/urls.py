@@ -4,7 +4,7 @@ from django.conf.urls import patterns, url
 urlpatterns = patterns(
     "award.views",
     (r'^$', 'index'),
-    (r'^create', 'create'),
+    (r'^create/', 'create'),
     (r'^clone_award/', 'clone_award'),
     (r'^api/create_award/', 'create_award'),
     (r'^api/get_award/', 'get_award'),
@@ -13,7 +13,7 @@ urlpatterns = patterns(
     (r'^api/edit_award/', 'edit_award'),
     (r'^api/update_award/', 'update_award'),
     (r'^api/clone_preview/', 'clone_preview'),
-    (r'^api/clone_award/info', 'clone_award_info'),
-    (r'^api/clone_award/edit_award', 'edit_clone_award'),
-    (r'^api/clone_award/save_award', 'save_clone_award'),
+    (r'^api/clone_award/info/', 'clone_award_info'),
+    (r'^api/clone_award/edit_award/', 'edit_clone_award'),
+    (r'^api/clone_award/save_award/', 'save_clone_award'),
 )

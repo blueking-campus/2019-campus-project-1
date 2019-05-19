@@ -138,10 +138,9 @@ class Award(models.Model):
     @staticmethod
     def to_array(award_list):
         return [{
-            'id': award.id,
-            'name': award.name,
-            'organization': award.organization,
-            'count': Form.objects.filter(award=award).count()
+            'info': award,
+            'count': Form.objects.filter(award=award).count(),
+            'awarded_count': Form.objects.filter(award=award, status=4).count()
         } for award in award_list]
 
 

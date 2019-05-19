@@ -87,9 +87,9 @@
                 <div class="collapse navbar-collapse navbar-responsive-collapse" id="bk-example-navbar-collapse-3">
                     <ul class="nav navbar-nav ">
                         <!--<li :class="{'bk-cur':item.active}"  v-for="item in renderData.items">-->
-                        <li><a href="javascript:void(0);">奖项申报<span></span></a></li>
-                        <li class="bk-cur"><a href="javascript:void(0);">系统管理<span></span></a></li>
-                        <li><a href="javascript:void(0);">个人中心<span></span></a></li>
+                        <li><a href="/">奖项申报<span></span></a></li>
+                        <li class="bk-cur"><a href="/award/">系统管理<span></span></a></li>
+                        <li><a href="/form/">个人中心<span></span></a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li>
@@ -113,11 +113,11 @@
                     <div class="navbar-collapse navbar-hov">
                         <ul class="nav navbar-nav side-nav">
                             <li>
-                                <a href="javascript:void(0);"> <i class="fa fa-dashboard "> </i>
+                                <a href="/organization/"> <i class="fa fa-dashboard "> </i>
                                     <span>组织管理</span> <i class="fa fa-fw "></i> </a>
                             </li>
                             <li class="active">
-                                <a href="javascript:void(0);"> <i class="fa fa-wrench "> </i>
+                                <a href="/award/"> <i class="fa fa-wrench "> </i>
                                     <span>奖项信息</span> <i class="fa fa-fw "></i> </a>
                             </li>
                         </ul>
@@ -150,9 +150,9 @@
                             <select id="input_level" style="width: 100px;font-size: 12px">
                                 {% for level in levels %}
                                     {% ifequal award.level.id level.id %}
-                                        <option value="{{ level.id }}" selected>{{ level.name }}</option>
+                                        <option value="{{ level.name }}" selected>{{ level.name }}</option>
                                     {% else %}
-                                        <option value="{{ level.id }}">{{ level.name }}</option>
+                                        <option value="{{ level.name }}">{{ level.name }}</option>
                                     {% endifequal %}
                                 {% endfor %}
                             </select>
@@ -170,7 +170,7 @@
                              data-date-format="yyyy-mm-dd hh:ii" data-link-field="dtp_input1">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
                             <input class="form-control" size="16" type="text"
-                                   value='{{ award.submit_end_time|date:"Y-m-d H:i" }}' placeholder="选择日期"
+                                   value='{{ award.submit_end_time|date:"Y-m-d H:i:s" }}' placeholder="选择日期"
                                    id="input_start_time">
                             <input type="hidden" id="dtp_input1" value="2019-04-30">
                             <br>
@@ -182,7 +182,7 @@
                              data-date-format="yyyy-mm-dd hh:ii" data-link-field="dtp_input1">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
                             <input class="form-control" size="16" type="text"
-                                   value='{{ award.submit_end_time|date:"Y-m-d H:i" }}' placeholder="选择日期"
+                                   value='{{ award.submit_end_time|date:"Y-m-d H:i:s" }}' placeholder="选择日期"
                                    id="input_end_time">
                             <input type="hidden" id="dtp_input2" value="2019-04-30">
                             <br>
@@ -260,6 +260,7 @@
         status = $('input[name=status]:checked').val();
         data = {
             'id': id,
+            'pre_name': JSON.parse(sessionStorage.getItem(id))['pre_name'],
             'name': name,
             'requirement': requirement,
             'level': level,
