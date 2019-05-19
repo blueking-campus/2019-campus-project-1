@@ -6,7 +6,9 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 
 from response import APIResult, APIServerError
+from bkoauth.utils import transform_uin
 from home_application.models import Award, Organization, Form, Choice
+from home_application.decorators import require_principal
 
 # Create your views here.
 
@@ -20,12 +22,13 @@ UN_AWARD = 3
 AWARD = 4
 
 
+@require_principal
 def index(request):
     """
     返回评审首页
     """
     uin = request.COOKIES.get("uin")
-    qq = get_user_qq(uin)
+    qq = transform_uin(uin)
     cur_page = int(request.GET.get('page', 1))
     limit = int(request.GET.get('limit', 5))
     all_form_counts = Form.objects.filter(creator__contains=qq).count()
@@ -39,6 +42,7 @@ def index(request):
                   {'forms': forms, 'all_page': all_page, 'cur_page': cur_page})
 
 
+@require_principal
 def edit_review(request, form_id):
     """
     返回编辑评语页面
@@ -48,6 +52,7 @@ def edit_review(request, form_id):
                   {'form': form})
 
 
+@require_principal
 def update_review(request):
     """
     更新申请表接口
@@ -65,7 +70,7 @@ def update_review(request):
             }
             return APIServerError(response)
         uin = request.COOKIES.get("uin")
-        qq = get_user_qq(uin)
+        qq = transform_uin(uin)
         form_id = int(req["form_id"])
         comment = req["comment"]
         status = int(req["status"])
@@ -91,6 +96,7 @@ def update_review(request):
         return APIResult(response)
 
 
+@require_principal
 def reject_review(request):
     """
     驳回指定申请表接口
@@ -100,6 +106,7 @@ def reject_review(request):
     return HttpResponseRedirect('/review/')
 
 
+@require_principal
 def pass_review(request):
     """
     通过指定申请表接口
@@ -107,9 +114,3 @@ def pass_review(request):
     form_id = int(request.GET.get('form_id'))
     Form.objects.filter(form_id=form_id).update(status=PASS)
     return HttpResponseRedirect('/review/')
-
-
-def get_user_qq(uin):
-    qq = uin.split('o')[1]
-    qq = str(int(qq))
-    return qq

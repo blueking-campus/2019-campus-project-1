@@ -7,6 +7,7 @@ from django.shortcuts import render
 
 from response import APIResult, APIServerError
 from home_application.models import Award, Organization, Form, Choice
+from home_application.decorators import require_admin, require_principal
 
 
 # Create your views here.
@@ -26,9 +27,11 @@ def index(request):
     awards = Award.objects.filter(is_delete=0)[offset: offset + limit]
     organizations = Organization.objects.all()
     return render(request, "award/award_index.html",
-                  {'awards': Award.to_array(awards), 'all_page': all_page, 'cur_page': cur_page, 'organizations': organizations})
+                  {'awards': Award.to_array(awards), 'all_page': all_page, 'cur_page': cur_page,
+                   'organizations': organizations})
 
 
+@require_admin
 def create(request):
     """
     返回创建奖项页面
@@ -38,6 +41,7 @@ def create(request):
     return render(request, 'award/create_award.html', {'levels': levels, 'organizations': organizations})
 
 
+@require_admin
 def clone_award(request):
     """
     返回克隆奖项页面
@@ -46,6 +50,7 @@ def clone_award(request):
     return render(request, 'award/clone_award.html', {'organizations': organizations})
 
 
+@require_admin
 def create_award(request):
     """
     创建奖项接口
@@ -114,6 +119,7 @@ def get_award(request):
                                                      'forms': forms, 'all_page': all_page, 'cur_page': cur_page})
 
 
+@require_admin
 def delete_award(request):
     """
     软删除指定奖项信息接口
@@ -133,6 +139,7 @@ def delete_award(request):
     return HttpResponseRedirect('/award/')
 
 
+@require_admin
 def edit_award(request):
     """
     返回编辑奖项页面
@@ -151,6 +158,7 @@ def edit_award(request):
     return render(request, "award/edit_award.html", {'award': award, 'levels': levels})
 
 
+@require_admin
 def update_award(request):
     """
     更新指定奖项信息接口
@@ -247,6 +255,7 @@ def search_award(request):
                   {'awards': awards, 'all_page': all_page, 'cur_page': cur_page, 'organizations': organizations})
 
 
+@require_admin
 def clone_preview(request):
     """
     返回批量克隆预览结果
@@ -300,6 +309,7 @@ def clone_preview(request):
         pass
 
 
+@require_admin
 def clone_award_info(request):
     """
     返回指定克隆奖项信息页面
@@ -329,6 +339,7 @@ def clone_award_info(request):
                                                            'forms': forms, 'allPage': allPage, 'cur_page': cur_page})
 
 
+@require_admin
 def edit_clone_award(request):
     """
     返回编辑指定克隆奖项信息页面
@@ -347,6 +358,7 @@ def edit_clone_award(request):
     return render(request, "award/edit_clone_award.html", {'award': award, 'levels': levels})
 
 
+@require_admin
 def save_clone_award(request):
     """
     保存批量克隆结果接口
