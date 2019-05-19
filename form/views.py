@@ -15,20 +15,21 @@ from response import APIServerError
 # 获取当前登录用户所申报的所有内容
 @csrf_protect
 def get_form_list(request):
-    user = UserInfo.objects.filter(auth_token=request.user)[0]
-    all_form = Form.objects.filter(updater=user.qq).all()
+    user = UserInfo.objects.filter(auth_token=request.user).first()
+    all_award = Award.objects.filter(status=True)
+    all_award = Award.my_award(all_award, user.qq)
     data = {}
     if request.method == "GET":
         current_page = int(request.GET.get('page', 1))
-        paginator = Paginator(all_form, 5)
+        paginator = Paginator(all_award, 5)
         page_num = paginator.num_pages
         try:
-            form_list = paginator.page(current_page)
-            if form_list.has_next():
+            award_list = paginator.page(current_page)
+            if award_list.has_next():
                 next_page = current_page + 1
             else:
                 next_page = current_page
-            if form_list.has_previous():
+            if award_list.has_previous():
                 previous_page = current_page - 1
             else:
                 previous_page = current_page
@@ -38,7 +39,7 @@ def get_form_list(request):
                 'current_page': current_page,
                 'next_page': next_page,
                 'previous_page': previous_page,
-                'results': form_list
+                'results': award_list
             }
         except InvalidPage:
             # 如果请求的页数不存在，重定向页面
@@ -82,8 +83,12 @@ def create_form(request, award_id):
         }
         return APIResult(response)
     else:
+        IS_NEED_AFFIX = 0
+        if award.has_extra_info:
+            IS_NEED_AFFIX = 1
         return render(request, 'form/create_form.html', {'award': award,
-                                                         'principal': principal})
+                                                         'principal': principal,
+                                                         'affix': IS_NEED_AFFIX})
 
 
 def get_form(request, award_id):
