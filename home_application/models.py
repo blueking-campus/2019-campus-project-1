@@ -143,6 +143,40 @@ class Award(models.Model):
             'awarded_count': Form.objects.filter(award=award, status=4).count()
         } for award in award_list]
 
+    @staticmethod
+    def my_award(award_list, qq):
+        # form_list = Form.objects.filter(creator__contains=qq)
+        UNDECLARED = -1
+        results = []
+        for award in award_list:
+            form = Form.objects.filter(creator__contains=qq, award=award).first()
+            if form:
+                form_status = form.status
+                status_info = form.get_status_display
+                created_time = form.created_time
+                creator = form.creator
+                form_id = form.form_id
+            else:
+                form_status = UNDECLARED
+                status_info = u"未申报"
+                created_time = ""
+                creator = ""
+                form_id = UNDECLARED
+            data = {
+                'id': award.id,
+                'name': award.name,
+                'organization': award.organization,
+                'status': award.status,
+                'form_status': form_status,
+                'status_info': status_info,
+                'created_time': created_time,
+                'creator': creator,
+                'form_id': form_id
+            }
+            results.append(data)
+
+        return results
+
 
 class Form(models.Model):
     form_id = models.AutoField(verbose_name=u'申请表id', primary_key=True)
