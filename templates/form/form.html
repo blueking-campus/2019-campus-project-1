@@ -90,14 +90,12 @@
                     <div class="navbar-collapse navbar-hov">
                         <ul class="nav navbar-nav side-nav" style="padding-bottom: 0">
                             <li class="active">
-                                <a href="javascript:void(0);"> <i class="fa fa-wrench "></i>
+                                <a href="/form/">  </i>
                                     <span>我的申报</span> <i class="fa fa-fw "></i> </a>
-                                <ul id="demo" class="collapse"></ul>
                             </li>
                             <li>
-                                <a href="javascript:void(0);"> <i class="fa fa-wrench "></i>
+                                <a href="/review/"></i>
                                     <span>我的审核</span> <i class="fa fa-fw "></i> </a>
-                                <ul id="demo" class="collapse"></ul>
                             </li>
                         </ul>
                     </div>
@@ -156,27 +154,28 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for form in results %}
+                        {% for award in results %}
                             <tr>
-                                <td>{{ form.award.organization.name }}</td>
-                                <td>{{ form.award.name }}</td>
-                                {% if form.award.status %}
+                                <td>{{ award.organization.name }}</td>
+                                <td>{{ award.name }}</td>
+                                {% if award.status %}
                                     <td>生效中</td>
                                 {% else %}
                                     <td>已过期</td>
                                 {% endif %}
-                                <td>{{ form.creator }}</td>
-                                <td>{{ form.get_status_display }}</td>
-                                <td>{{ form.created_time }}</td>
+                                <td>{{ award.creator }}</td>
+                                <td>{{ award.status_info }}</td>
+                                <td>{{ award.created_time }}</td>
                                 <td>
-                                    {% if form.status == 0 or form.status == 1 or form.status == 2%}
-                                        <a href="/form/get_form/{{ form.award.id}}/?id={{ form.form_id }}">编辑</a>
-                                    {% elif form.status == 1 %}
-                                        <a href="#" id="applyBtn">重新申请</a>
-                                    {% else %}
-                                        <a href="#">申报</a>
+                                    {% if award.form_status == 0 or award.form_status == 1 or award.form_status == 2%}
+                                        <a href="/form/get_form/{{ award.id}}/?id={{ award.form_id }}">编辑</a>
+                                    {% elif award.form_status == 1 %}
+                                        <a href="/form/get_form/{{ award.id}}/?id={{ award.form_id }}" id="applyBtn">重新申请</a>
+                                    {% elif award.form_status == -1 %}
+                                        <a href="/form/create_form/{{ award.id }}">申报</a>
+                                    {% elif award.form_status == 3 or award.form_status == 4 %}
+                                        <a href="/form/get_form/{{ award.id }}/?id={{ award.form_id }}" >查看</a>
                                     {% endif %}
-                                    <a href="/form/get_form/{{ form.award.id }}/?id={{ form.form_id }}" >查看</a>
                                 </td>
                             </tr>
                         {% endfor %}

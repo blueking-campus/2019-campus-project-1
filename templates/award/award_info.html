@@ -78,10 +78,9 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li>
                             <a href="javascript:void(0);">
-                                <img src="http://q1.qlogo.cn/g?b=qq&amp;nk=1181849919&amp;s=100&amp;t=1556272002"
-                                     onerror="javascript:this.src='/static/images/getheadimg.jpg';" width="30"
-                                     alt="Avatar" style="border-radius:50%;margin-right:10px;">
-                                <span>管理者 ( admin )</span>
+                                <img onerror="javascript:this.src='/static/images/getheadimg.jpg';" width="30"
+                                     alt="Avatar" style="border-radius:50%;margin-right:10px;" id="user_icon">
+                                <span id="user_qq"></span>
                             </a>
                         </li>
                     </ul>
@@ -97,11 +96,11 @@
                     <div class="navbar-collapse navbar-hov">
                         <ul class="nav navbar-nav side-nav" style="padding-bottom: 0">
                             <li>
-                                <a href="/organization/"> <i class="fa fa-dashboard "> </i>
+                                <a href="/organization/">  </i>
                                     <span>组织管理</span> <i class="fa fa-fw "></i> </a>
                             </li>
                             <li class="active">
-                                <a href="/award/"> <i class="fa fa-wrench "> </i>
+                                <a href="/award/"></i>
                                     <span>奖项信息</span> <i class="fa fa-fw "></i> </a>
                             </li>
                         </ul>
@@ -143,9 +142,9 @@
                         <div>
                             <label class="control-label col-sm-3 pt0">状态</label>
                             {% if award.status %}
-                                <div>生效</div>
+                            <div>生效</div>
                             {% else %}
-                                <div>过期</div>
+                            <div>过期</div>
                             {% endif %}
 
                         </div>
@@ -191,32 +190,32 @@
                             </thead>
                             <tbody>
                             {% for form in forms %}
-                                <tr>
-                                    <td>{{ form.creator }}</td>
-                                    <td>{{ form.get_status_display }}</td>
-                                    <td>{{ form.created_time }}</td>
-                                    <td>{{ form.info }}</td>
-                                    <td>{{ form.extra_info }}</td>
-                                    <td>{{ form.comment }}</td>
-                                    <td>
-                                        <a href="">查看</a>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td>{{ form.creator }}</td>
+                                <td>{{ form.get_status_display }}</td>
+                                <td>{{ form.created_time }}</td>
+                                <td>{{ form.info }}</td>
+                                <td>{{ form.extra_info }}</td>
+                                <td>{{ form.comment }}</td>
+                                <td>
+                                    <a href="">查看</a>
+                                </td>
+                            </tr>
                             {% endfor %}
 
 
                             </tbody>
                         </table>
                         {% ifnotequal cur_page 1 %}
-                            <a id="page_up" href="?page={{ cur_page|add:'-1' }}">
-                                上一页
-                            </a>
+                        <a id="page_up" href="?page={{ cur_page|add:'-1' }}">
+                            上一页
+                        </a>
                         {% endifnotequal %}
                         第{{ cur_page }}/{{ all_page }}页
                         {% ifnotequal cur_page all_page %}
-                            <a id="page_down" href="?page={{ cur_page|add:'1' }}">
-                                下一页
-                            </a>
+                        <a id="page_down" href="?page={{ cur_page|add:'1' }}">
+                            下一页
+                        </a>
                         {% endifnotequal %}
                     </div>
 
@@ -228,7 +227,23 @@
 <script type="text/javascript">
     window.onload = function () {
         sessionStorage.clear();
+        var qq = get_qq();
+        document.getElementById('user_qq').innerHTML = qq;
+        document.getElementById('user_icon').setAttribute("src", "http://q1.qlogo.cn/g?b=qq&nk=" + qq + "&s=100&t=1558273954")
     };
+
+    function get_qq() {
+        var uin = document.cookie.split("uin=")[1].split(";")[0];
+        while (true) {
+            if (uin[0] == "o") {
+                uin = uin.slice(1)
+            }
+            else {
+                break
+            }
+        }
+        return uin
+    }
 </script>
 </body>
 

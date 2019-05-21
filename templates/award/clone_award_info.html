@@ -78,10 +78,9 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li>
                             <a href="javascript:;">
-                                <img src="http://q1.qlogo.cn/g?b=qq&amp;nk=1181849919&amp;s=100&amp;t=1556272002"
-                                     onerror="javascript:this.src='/static/images/getheadimg.jpg';" width="30"
-                                     alt="Avatar" style="border-radius:50%;margin-right:10px;">
-                                <span>管理者 ( admin )</span>
+                                <img onerror="javascript:this.src='/static/images/getheadimg.jpg';" width="30"
+                                     alt="Avatar" style="border-radius:50%;margin-right:10px;" id="user_icon">
+                                <span id="user_qq"></span>
                             </a>
                         </li>
                     </ul>
@@ -97,11 +96,11 @@
                     <div class="navbar-collapse navbar-hov">
                         <ul class="nav navbar-nav side-nav">
                             <li>
-                                <a href="/organization/" onclick="clean()"> <i class="fa fa-dashboard "> </i>
+                                <a href="/organization/">  </i>
                                     <span>组织管理</span> <i class="fa fa-fw "></i> </a>
                             </li>
                             <li class="active">
-                                <a href="/award/" onclick="clean()"> <i class="fa fa-wrench "> </i>
+                                <a href="/award/"></i>
                                     <span>奖项信息</span> <i class="fa fa-fw "></i> </a>
                             </li>
                         </ul>
@@ -227,8 +226,28 @@
     </div>
 </div>
 <script type="text/javascript">
+    window.onload = function () {
+        var qq = get_qq();
+        document.getElementById('user_qq').innerHTML = qq;
+        document.getElementById('user_icon').setAttribute("src", "http://q1.qlogo.cn/g?b=qq&nk=" + qq + "&s=100&t=1558273954")
+    };
+
+    function get_qq() {
+        var uin = document.cookie.split("uin=")[1].split(";")[0];
+        while (true) {
+            if (uin[0] == "o") {
+                uin = uin.slice(1)
+            }
+            else {
+                break
+            }
+        }
+        return uin
+    }
+
     var id = document.getElementById('get_id').innerHTML;
     $("#name").append(JSON.parse(sessionStorage.getItem(id))['name'])
+
     function clean() {
         sessionStorage.clear();
     }
